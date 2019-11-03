@@ -9,14 +9,14 @@ import com.amjad.starwars.domain.useCase.GetCharacterDetailsUseCase
 import com.amjad.starwars.presentation.models.CharacterPresentationModel
 import javax.inject.Inject
 
-class CharacterDetailsViewModel @Inject constructor(private val getCharacterDetailsUseCase: GetCharacterDetailsUseCase): ViewModel() {
+class CharacterDetailsViewModel @Inject constructor(private val getCharacterDetailsUseCase: GetCharacterDetailsUseCase,private val urlExtractor: UrlExtractor): ViewModel() {
 
 
     fun getCharacterDetails(id:String): LiveData<Resource<CharacterPresentationModel>> {
         val liveDataMerger = MediatorLiveData<Resource<CharacterPresentationModel>>()
         liveDataMerger.postValue(Resource.loading(null))
 
-        liveDataMerger.addSource(getCharacterDetailsUseCase.getCharacterDetails(UrlExtractor.extract(id))) {
+        liveDataMerger.addSource(getCharacterDetailsUseCase.getCharacterDetails(urlExtractor.extract(id))) {
             liveDataMerger.postValue(Resource.success(it.data))
         }
         return liveDataMerger

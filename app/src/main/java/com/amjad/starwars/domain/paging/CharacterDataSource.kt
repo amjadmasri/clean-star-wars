@@ -14,7 +14,7 @@ import retrofit2.Response
 import timber.log.Timber
 import javax.inject.Inject
 
-class CharacterDataSource @Inject constructor(private val characterRemoteSource: CharacterRemoteSource) :
+class CharacterDataSource @Inject constructor(private val characterRemoteSource: CharacterRemoteSource,private val urlExtractor: UrlExtractor) :
     PageKeyedDataSource<String, CharacterDataModel>() {
 
     private lateinit var name: String
@@ -41,7 +41,7 @@ class CharacterDataSource @Inject constructor(private val characterRemoteSource:
                        val items = data?.characters
 
                        callback.onResult(items as MutableList<CharacterDataModel>,"0",
-                           data.next?.let { UrlExtractor.extractPage(data.next) })
+                           data.next?.let { urlExtractor.extractPage(data.next) })
                    } else {
 
                    }
@@ -71,7 +71,7 @@ class CharacterDataSource @Inject constructor(private val characterRemoteSource:
                         val data = response.body()
                         val items = data?.characters
 
-                        callback.onResult(items as MutableList<CharacterDataModel>,  data.next?.let { UrlExtractor.extractPage(data.next) })
+                        callback.onResult(items as MutableList<CharacterDataModel>,  data.next?.let { urlExtractor.extractPage(data.next) })
                     } else {
 
                     }

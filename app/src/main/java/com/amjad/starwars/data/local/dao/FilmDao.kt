@@ -18,6 +18,6 @@ interface FilmDao {
     fun insert(flmLocalDataModel: FilmLocalDataModel): Completable
 
     @Query("SELECT * from films where  resourceId=:id")
-    fun getFilmByUrl(id:String): LiveData<FilmLocalDataModel>
+    fun getFilmByResourceId(id:String): LiveData<FilmLocalDataModel>
 
 }

@@ -1,5 +1,6 @@
 package com.amjad.starwars.data.di
 
+import com.amjad.starwars.common.utilities.UrlExtractor
 import com.amjad.starwars.data.local.FilmLocalSource
 import com.amjad.starwars.data.local.FilmLocalSourceImp
 import com.amjad.starwars.data.mappers.CharacterMapper
@@ -30,7 +31,7 @@ class DataModule {
         characterRepositoryImp
 
     @Provides
-    fun provideCharacterMapper(): CharacterMapper = CharacterMapper()
+    fun provideCharacterMapper(urlExtractor: UrlExtractor): CharacterMapper = CharacterMapper(urlExtractor)
 
 
     @Provides
@@ -42,7 +43,7 @@ class DataModule {
         planetRepositoryImp
 
     @Provides
-    fun providePlanetMapper(): PlanetMapper = PlanetMapper()
+    fun providePlanetMapper(urlExtractor: UrlExtractor): PlanetMapper = PlanetMapper(urlExtractor)
 
 
     @Provides
@@ -54,7 +55,7 @@ class DataModule {
         speciesRepositoryImp
 
     @Provides
-    fun provideSpeciesMapper(): SpeciesMapper = SpeciesMapper()
+    fun provideSpeciesMapper(urlExtractor: UrlExtractor): SpeciesMapper = SpeciesMapper(urlExtractor)
 
     @Provides
     fun provideFilmRemoteSource(planetRemoteSource: FilmRemoteSourceImp): FilmRemoteSource =
@@ -69,5 +70,5 @@ class DataModule {
         filmRepositoryImp
 
     @Provides
-    fun provideFilmMapper(): FilmMapper = FilmMapper()
+    fun provideFilmMapper(urlExtractor: UrlExtractor): FilmMapper = FilmMapper(urlExtractor)
 }

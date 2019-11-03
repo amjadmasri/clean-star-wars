@@ -7,6 +7,7 @@ import com.amjad.starwars.common.di.interfaces.ApiUrlInfo
 import com.amjad.starwars.common.di.interfaces.DatabaseInfo
 import com.amjad.starwars.common.di.interfaces.DateFormatInfo
 import com.amjad.starwars.common.utilities.AppConstants
+import com.amjad.starwars.common.utilities.UrlExtractor
 import com.amjad.starwars.data.local.AppDatabase
 import com.amjad.starwars.data.remote.ApiService
 import com.google.gson.Gson
@@ -100,4 +101,6 @@ class AppModule {
         .create()
 
 
+    @Provides
+    fun provideUrlExtractor() :UrlExtractor =UrlExtractor()
 }
