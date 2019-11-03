@@ -7,5 +7,5 @@ import io.reactivex.Completable
 interface FilmLocalSource {
     fun insertFilm(filmLocalDataModel: FilmLocalDataModel):Completable
 
-    fun getFilmByURL(url:String):LiveData<FilmLocalDataModel>
+    fun getFilmById(id:String):LiveData<FilmLocalDataModel>
 }

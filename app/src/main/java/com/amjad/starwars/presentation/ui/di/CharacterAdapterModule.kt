@@ -12,7 +12,7 @@ import dagger.Provides
 class CharacterAdapterModule {
 
     @Provides
-    fun provideMVImagePagedAdapter(characterDiffCallBacks: CharacterDiffCallBacks): CharactersPagedAdapter {
+    fun provideCharactersPagedAdapter(characterDiffCallBacks: CharacterDiffCallBacks): CharactersPagedAdapter {
         return CharactersPagedAdapter(characterDiffCallBacks)
     }
 

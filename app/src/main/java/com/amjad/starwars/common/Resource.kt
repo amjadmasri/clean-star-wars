@@ -1,4 +1,4 @@
-package com.amjad.starwars.presentation
+package com.amjad.starwars.common
 
 data class Resource<out T>(val status: Status, val data: T?, val message: String?) {
     companion object {

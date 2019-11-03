@@ -7,8 +7,7 @@ import com.amjad.starwars.data.models.PlanetDataModel
 import com.amjad.starwars.data.remote.PlanetRemoteSource
 import com.amjad.starwars.domain.models.PlanetDomainModel
 import com.amjad.starwars.domain.repository.PlanetRepository
-import com.amjad.starwars.presentation.Resource
-import io.reactivex.Scheduler
+import com.amjad.starwars.common.Resource
 import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable

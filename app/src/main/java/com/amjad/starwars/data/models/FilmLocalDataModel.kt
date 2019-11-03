@@ -18,5 +18,6 @@ data class FilmLocalDataModel(
     val producer: String,
     val releaseDate: String,
     val title: String,
+    val resourceId:String,
     val url: String
 )

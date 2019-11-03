@@ -11,7 +11,6 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.SearchView
 import android.widget.Toast
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
@@ -21,38 +20,22 @@ import androidx.recyclerview.widget.LinearLayoutManager
 
 import com.amjad.starwars.R
 import com.amjad.starwars.data.models.CharacterDataModel
-import com.amjad.starwars.presentation.Status
+import com.amjad.starwars.common.Status
 import com.amjad.starwars.presentation.viewModels.SearchCharacterViewModel
 import com.amjad.starwars.presentation.ui.base.BaseFragment
 import com.amjad.starwars.presentation.viewModels.ViewModelProviderFactory
 import kotlinx.android.synthetic.main.fragment_search_charracters.*
-import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Provider
 
 /**
  * A simple [Fragment] subclass.
  */
-class SearchCharactersFragment : BaseFragment(), SearchView.OnQueryTextListener {
-    override fun onQueryTextChange(newText: String?): Boolean {
-        return true
-    }
+class SearchCharactersFragment : BaseFragment(), SearchView.OnQueryTextListener,
+    CharactersPagedAdapter.CharacterAdapterListener {
 
-    override fun onQueryTextSubmit(query: String?): Boolean {
 
-        if (query != null) {
-            viewModel.searchCharacterByName(query)
-                .observe(this, Observer {
-                    when(it.status){
-                        Status.SUCCESS->  renderData(it.data)
-                        Status.LOADING -> showLoading()
-                    }
 
-                })
-        }
-
-        return true
-    }
 
     private fun showLoading() {
         Log.d("amjad","loading")
@@ -95,8 +78,6 @@ class SearchCharactersFragment : BaseFragment(), SearchView.OnQueryTextListener 
 
         viewModel = ViewModelProviders.of(this, viewModelProviderFactory)
             .get(SearchCharacterViewModel::class.java)
-
-
     }
 
     private fun setupUi() {
@@ -112,6 +93,32 @@ class SearchCharactersFragment : BaseFragment(), SearchView.OnQueryTextListener 
         character_recycler.layoutManager=linearLayoutManager.get()
         character_recycler.adapter=charactersPagedAdapter
 
+        charactersPagedAdapter.listener=this
+
+    }
+
+    override fun onCharacterClick(id:String?) {
+        navController.navigate(SearchCharactersFragmentDirections.actionSearchCharractersFragmentToCharacterDetailsFragment(id!!))
+    }
+
+    override fun onQueryTextChange(newText: String?): Boolean {
+        return true
+    }
+
+    override fun onQueryTextSubmit(query: String?): Boolean {
+
+        if (query != null) {
+            viewModel.searchCharacterByName(query)
+                .observe(this, Observer {
+                    when(it.status){
+                        Status.SUCCESS->  renderData(it.data)
+                        Status.LOADING -> showLoading()
+                    }
+
+                })
+        }
+
+        return true
     }
 
 }

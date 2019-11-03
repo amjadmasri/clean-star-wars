@@ -1,4 +1,4 @@
-package com.amjad.starwars.presentation
+package com.amjad.starwars.common
 
 enum class Status {
     SUCCESS,

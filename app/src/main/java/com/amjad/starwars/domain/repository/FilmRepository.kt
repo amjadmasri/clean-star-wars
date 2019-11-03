@@ -2,7 +2,7 @@ package com.amjad.starwars.domain.repository
 
 import androidx.lifecycle.LiveData
 import com.amjad.starwars.domain.models.FilmDomainModel
-import com.amjad.starwars.presentation.Resource
+import com.amjad.starwars.common.Resource
 
 interface FilmRepository {
 

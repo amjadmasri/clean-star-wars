@@ -17,7 +17,7 @@ interface FilmDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(flmLocalDataModel: FilmLocalDataModel): Completable
 
-    @Query("SELECT * from films where  url=:url")
-    fun getFilmByUrl(url:String): LiveData<FilmLocalDataModel>
+    @Query("SELECT * from films where  resourceId=:id")
+    fun getFilmByUrl(id:String): LiveData<FilmLocalDataModel>
 
 }

@@ -6,6 +6,7 @@ import com.amjad.starwars.common.di.builders.FragmentBuilderModule
 import com.amjad.starwars.common.di.modules.AppModule
 import com.amjad.starwars.common.di.modules.ViewModelModule
 import com.amjad.starwars.data.di.DataModule
+import com.amjad.starwars.domain.di.DomainModule
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
@@ -20,8 +21,8 @@ import javax.inject.Singleton
         AppModule::class,
         ActivityBuilderModule::class,
         FragmentBuilderModule::class,
-        DataModule::class
-
+        DataModule::class,
+        DomainModule::class
     ]
 )
 interface AppComponent : AndroidInjector<StarWarsChallengeApplication> {

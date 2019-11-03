@@ -10,7 +10,7 @@ class FilmLocalSourceImp @Inject constructor(private val appDatabase: AppDatabas
         return appDatabase.filmDao().insert(filmLocalDataModel)
     }
 
-    override fun getFilmByURL(url: String): LiveData<FilmLocalDataModel> {
-       return appDatabase.filmDao().getFilmByUrl(url)
+    override fun getFilmById(id: String): LiveData<FilmLocalDataModel> {
+       return appDatabase.filmDao().getFilmByUrl(id)
     }
 }

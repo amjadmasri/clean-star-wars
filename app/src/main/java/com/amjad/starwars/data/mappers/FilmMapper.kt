@@ -17,6 +17,12 @@ open class FilmMapper :Mapper<FilmRemoteDataModel,FilmDomainModel>{
      fun mapRemoteToLocal(remote: FilmRemoteDataModel): FilmLocalDataModel {
         return FilmLocalDataModel(
            remote.episodeId,remote.created,remote.director,remote.edited,remote.openingCrawl,
-            remote.producer,remote.releaseDate,remote.title,remote.url)
+            remote.producer,remote.releaseDate,remote.title,UrlExtractor.extract(remote.url),remote.url)
+    }
+
+    fun mapLocalToDomain(local: FilmLocalDataModel): FilmDomainModel {
+        return FilmDomainModel(
+            emptyList(),local.created,local.director,local.edited,local.episodeId,local.openingCrawl,
+            local.producer,local.releaseDate, emptyList(),local.title,local.url)
     }
 }

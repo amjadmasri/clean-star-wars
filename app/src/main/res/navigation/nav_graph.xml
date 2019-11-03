@@ -9,5 +9,18 @@
         android:id="@+id/searchCharractersFragment"
         android:name="com.amjad.starwars.presentation.ui.searchCharacters.SearchCharactersFragment"
         android:label="fragment_search_charracters"
-        tools:layout="@layout/fragment_search_charracters" />
+        tools:layout="@layout/fragment_search_charracters" >
+        <action
+            android:id="@+id/action_searchCharractersFragment_to_characterDetailsFragment"
+            app:destination="@id/characterDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/characterDetailsFragment"
+        android:name="com.amjad.starwars.presentation.ui.characterDetails.CharacterDetailsFragment"
+        android:label="fragment_character_details"
+        tools:layout="@layout/fragment_character_details" >
+        <argument
+            android:name="character_id"
+            app:argType="string" />
+    </fragment>
 </navigation>
