@@ -7,6 +7,7 @@ import androidx.lifecycle.MediatorLiveData
 import com.amjad.starwars.common.Resource
 import com.amjad.starwars.common.Status
 import com.amjad.starwars.domain.mappers.CharacterPresentationMapper
+import com.amjad.starwars.domain.mappers.SpeciesPresentationMapper
 import com.amjad.starwars.domain.repository.CharacterRepository
 import com.amjad.starwars.presentation.models.CharacterPresentationModel
 import javax.inject.Inject
@@ -16,52 +17,77 @@ class GetCharacterDetailsUseCase @Inject constructor(
     private val getPlanetDetailsUseCase: GetPlanetDetailsUseCase,
     private val getSpeciesDetailsUseCase: GetSpeciesDetailsUseCase,
     private val getFilmsListUseCase: GetFilmsListUseCase,
-    private val characterPresentationMapper: CharacterPresentationMapper
+    private val characterPresentationMapper: CharacterPresentationMapper,
+    private val speciesPresentationMapper: SpeciesPresentationMapper
 ) {
+    private lateinit var characterDetails: CharacterPresentationModel
+    private val mediatorLiveData: MediatorLiveData<Resource<CharacterPresentationModel>> =
+        MediatorLiveData()
 
-    @SuppressLint("LogNotTimber")
     fun execute(id: String): LiveData<Resource<CharacterPresentationModel>> {
-        var characterDetails: CharacterPresentationModel
-        val mediatorLiveData: MediatorLiveData<Resource<CharacterPresentationModel>> =
-            MediatorLiveData()
+
         val characterSource = characterRepository.getCharacterDetails(id)
+
         mediatorLiveData.addSource(characterSource) {
-            Log.d("saed", "status is " + it.status)
             if (it.status == Status.SUCCESS) {
-                Log.d("saed", "in success")
                 characterDetails = characterPresentationMapper.fromDomainToPresentation(it.data)
                 mediatorLiveData.removeSource(characterSource)
-                val planetSource = getPlanetDetailsUseCase.execute(it.data!!.homeworld)
-                mediatorLiveData.addSource(planetSource) { planet ->
-                    if (planet.status == Status.SUCCESS) {
-                        characterDetails.homeworld = planet.data!!
-                        mediatorLiveData.postValue(Resource.success(characterDetails))
 
-                    }
-                }
+                getSpeciesDetails(it.data!!.species[0])
 
-                val speciesSource = getSpeciesDetailsUseCase.execute(it.data.species[0])
-                mediatorLiveData.addSource(speciesSource) { species ->
-                    if (species.status == Status.SUCCESS) {
-                        characterDetails.species = species.data
-                        mediatorLiveData.postValue(Resource.success(characterDetails))
-
-                    }
-                }
-
-                val filmSource = getFilmsListUseCase.execute(it.data.films)
-                mediatorLiveData.addSource(filmSource) { films ->
-                    if (films.status == Status.SUCCESS) {
-                        Log.d("wisam", " inside fild " + (films.data?.url ?: "hoho"))
-                        characterDetails.films.add(films.data!!)
-
-                        mediatorLiveData.postValue(Resource.success(characterDetails))
-                    }
-                }
+                getFilmsDetails(it.data.films)
+            }
+            else if (it.status==Status.ERROR){
+                mediatorLiveData.postValue(Resource.error("couldn't load character details"))
             }
         }
         return mediatorLiveData
     }
 
+    private fun getSpeciesDetails(id:String){
+        val speciesSource = getSpeciesDetailsUseCase.execute(id)
+        mediatorLiveData.addSource(speciesSource) { species ->
+            if (species.status == Status.SUCCESS) {
+                val speciesPresentation =
+                    speciesPresentationMapper.fromDomainToPresentation(species.data!!)
+                characterDetails.species = speciesPresentation
+                mediatorLiveData.postValue(Resource.success(characterDetails))
+                if (species.data.homeworld.isNotEmpty()) {
+                  getSpeciesHomeworldDetails(species.data.homeworld)
+                }
+            }
+            else if (species.status==Status.ERROR){
+                mediatorLiveData.postValue(Resource.error("couldn't load species details"))
+            }
+        }
+    }
 
+    private fun getFilmsDetails(ids: List<String>){
+        val filmSource = getFilmsListUseCase.execute(ids)
+        mediatorLiveData.addSource(filmSource) { films ->
+            if (films.status == Status.SUCCESS) {
+                characterDetails.films.add(films.data!!)
+
+                mediatorLiveData.postValue(Resource.success(characterDetails))
+            }
+            else if (films.status==Status.ERROR){
+                mediatorLiveData.postValue(Resource.error("couldn't load films details"))
+            }
+        }
+    }
+
+    private fun getSpeciesHomeworldDetails(id:String){
+        val planetSource =
+            getPlanetDetailsUseCase.execute(id)
+        mediatorLiveData.addSource(planetSource) { planet ->
+            if (planet.status == Status.SUCCESS) {
+
+                characterDetails.species!!.homeworld = planet.data!!
+                mediatorLiveData.postValue(Resource.success(characterDetails))
+
+            } else if (planet.status == Status.ERROR) {
+                mediatorLiveData.postValue(Resource.error("couldn't load home world details"))
+            }
+        }
+    }
 }

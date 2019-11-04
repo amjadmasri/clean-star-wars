@@ -19,6 +19,6 @@ data class CharacterPresentationModel(
     val mass: String= "",
     val name: String= "",
     val skinColor: String= "",
-    var species: SpeciesDomainModel? = null,
+    var species: SpeciesPresentationModel? = null,
     val url: String= ""
 )

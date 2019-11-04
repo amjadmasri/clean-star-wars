@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
@@ -59,6 +60,9 @@ class CharacterDetailsFragment : BaseFragment() {
                 if (it.status == Status.SUCCESS) {
                     render(it.data!!)
                 }
+                else if (it.status==Status.ERROR){
+                    Toast.makeText(activity,it.message,Toast.LENGTH_LONG).show()
+                }
             })
     }
 
@@ -70,16 +74,19 @@ class CharacterDetailsFragment : BaseFragment() {
         height_inches.text = data.heightInches
         hieght_feet.text = data.heightFeet
 
-        if (data.homeworld != null) {
-            homeworld_loading.hide()
-            planet_name_text.text = data.homeworld?.name
-            population_text.text = data.homeworld?.population
-        }
-        if (data.species != null) {
+        val species=data.species
+        if (species != null) {
             species_loading.hide()
-            species_name_text.text = data.species?.name
-            language_text.text = data.species?.language
+            species_name_text.text = species?.name
+            language_text.text = species?.language
         }
+
+        if (species?.homeworld != null) {
+            homeworld_loading.hide()
+            planet_name_text.text = species.homeworld?.name
+            population_text.text = species.homeworld?.population
+        }
+
         if(data.films.size>0) {
             film_loading.hide()
             filmAdapter.setData(data.films)

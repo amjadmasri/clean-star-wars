@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
 import com.amjad.starwars.common.Resource
+import com.amjad.starwars.common.Status
 import com.amjad.starwars.common.utilities.UrlExtractor
 import com.amjad.starwars.domain.useCase.GetCharacterDetailsUseCase
 import com.amjad.starwars.presentation.models.CharacterPresentationModel
@@ -17,7 +18,14 @@ class CharacterDetailsViewModel @Inject constructor(private val getCharacterDeta
         result.postValue(Resource.loading(null))
 
         result.addSource(getCharacterDetailsUseCase.execute(id)) {
-            result.setValue(Resource.success(it.data))
+            when(it.status){
+                Status.SUCCESS-> {
+                    result.setValue(Resource.success(it.data))
+                }
+                Status.ERROR->{
+                    result.setValue(Resource.error(it.message?:"there was an error "))
+                }
+            }
         }
 
     }

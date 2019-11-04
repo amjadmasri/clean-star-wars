@@ -14,7 +14,7 @@
     <string name="height_inches">Height Inches</string>
     <string name="species">Species</string>
     <string name="language">language</string>
-    <string name="home_world">Home world</string>
+    <string name="home_world">Species Home world</string>
     <string name="population">Population</string>
     <string name="films">Films:</string>
 </resources>
