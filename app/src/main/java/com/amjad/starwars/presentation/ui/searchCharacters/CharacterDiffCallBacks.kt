@@ -2,22 +2,23 @@ package com.amjad.starwars.presentation.ui.searchCharacters
 
 import androidx.recyclerview.widget.DiffUtil
 import com.amjad.starwars.data.models.CharacterDataModel
+import com.amjad.starwars.domain.models.CharacterDomainModel
 
-class CharacterDiffCallBacks : DiffUtil.ItemCallback<CharacterDataModel>() {
+class CharacterDiffCallBacks : DiffUtil.ItemCallback<CharacterDomainModel>() {
     override fun areItemsTheSame(
-        oldItem: CharacterDataModel,
-        newItem: CharacterDataModel
+        oldItem: CharacterDomainModel,
+        newItem: CharacterDomainModel
     ): Boolean {
         return oldItem.url == newItem.url
     }
 
-    override fun getChangePayload(oldItem: CharacterDataModel, newItem: CharacterDataModel): Any? {
+    override fun getChangePayload(oldItem: CharacterDomainModel, newItem: CharacterDomainModel): Any? {
         return super.getChangePayload(oldItem, newItem)
     }
 
     override fun areContentsTheSame(
-        oldItem: CharacterDataModel,
-        newItem: CharacterDataModel
+        oldItem: CharacterDomainModel,
+        newItem: CharacterDomainModel
     ): Boolean {
         return oldItem == newItem
     }

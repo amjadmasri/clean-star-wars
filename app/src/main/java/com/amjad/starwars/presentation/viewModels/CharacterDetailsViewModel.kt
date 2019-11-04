@@ -16,7 +16,7 @@ class CharacterDetailsViewModel @Inject constructor(private val getCharacterDeta
         val liveDataMerger = MediatorLiveData<Resource<CharacterPresentationModel>>()
         liveDataMerger.postValue(Resource.loading(null))
 
-        liveDataMerger.addSource(getCharacterDetailsUseCase.getCharacterDetails(urlExtractor.extract(id))) {
+        liveDataMerger.addSource(getCharacterDetailsUseCase.execute(id)) {
             liveDataMerger.postValue(Resource.success(it.data))
         }
         return liveDataMerger

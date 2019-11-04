@@ -20,7 +20,7 @@ class GetCharacterDetailsUseCase @Inject constructor(
 ) {
 
     @SuppressLint("LogNotTimber")
-    fun getCharacterDetails(id: String): LiveData<Resource<CharacterPresentationModel>> {
+    fun execute(id: String): LiveData<Resource<CharacterPresentationModel>> {
         var characterDetails: CharacterPresentationModel
         val mediatorLiveData: MediatorLiveData<Resource<CharacterPresentationModel>> =
             MediatorLiveData()
@@ -31,7 +31,7 @@ class GetCharacterDetailsUseCase @Inject constructor(
                 Log.d("saed", "in success")
                 characterDetails = characterPresentationMapper.fromDomainToPresentation(it.data)
                 mediatorLiveData.removeSource(characterSource)
-                val planetSource = getPlanetDetailsUseCase.getPlanetDetails(it.data!!.homeworld)
+                val planetSource = getPlanetDetailsUseCase.execute(it.data!!.homeworld)
                 mediatorLiveData.addSource(planetSource) { planet ->
                     if (planet.status == Status.SUCCESS) {
                         characterDetails.homeworld = planet.data!!
@@ -40,7 +40,7 @@ class GetCharacterDetailsUseCase @Inject constructor(
                     }
                 }
 
-                val speciesSource = getSpeciesDetailsUseCase.getSpeciesDetails(it.data.species[0])
+                val speciesSource = getSpeciesDetailsUseCase.execute(it.data.species[0])
                 mediatorLiveData.addSource(speciesSource) { species ->
                     if (species.status == Status.SUCCESS) {
                         characterDetails.species = species.data
@@ -49,7 +49,7 @@ class GetCharacterDetailsUseCase @Inject constructor(
                     }
                 }
 
-                val filmSource = getFilmsListUseCase.getFilmsList(it.data.films)
+                val filmSource = getFilmsListUseCase.execute(it.data.films)
                 mediatorLiveData.addSource(filmSource) { films ->
                     if (films.status == Status.SUCCESS) {
                         Log.d("wisam", " inside fild " + (films.data?.url ?: "hoho"))

@@ -8,17 +8,18 @@ import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.amjad.starwars.R
 import com.amjad.starwars.data.models.CharacterDataModel
+import com.amjad.starwars.domain.models.CharacterDomainModel
 
 
 class CharactersPagedAdapter(characterDiffCallBacks: CharacterDiffCallBacks) :
-    PagedListAdapter<CharacterDataModel, CharactersPagedAdapter.CharacterSearchViewHolder>(
+    PagedListAdapter<CharacterDomainModel, CharactersPagedAdapter.CharacterSearchViewHolder>(
         characterDiffCallBacks
     ) {
 
     lateinit var listener:CharacterAdapterListener
 
     override fun onBindViewHolder(holder: CharacterSearchViewHolder, position: Int) {
-        val characterDataModel: CharacterDataModel? = getItem(position)
+        val characterDataModel: CharacterDomainModel? = getItem(position)
 
         holder.bindTo(characterDataModel)
     }
@@ -31,24 +32,26 @@ class CharactersPagedAdapter(characterDiffCallBacks: CharacterDiffCallBacks) :
         fun onCharacterClick(id:String?)
     }
 
-    class CharacterSearchViewHolder(parent: ViewGroup, val listenrer:CharacterAdapterListener) : RecyclerView.ViewHolder(
+
+
+    class CharacterSearchViewHolder(parent: ViewGroup, private val listener:CharacterAdapterListener) : RecyclerView.ViewHolder(
         LayoutInflater.from(parent.context).inflate(R.layout.character_search_item, parent, false)
     ) {
 
         private val characterCard =itemView.findViewById<CardView>(R.id.character_card)
         private val nameText = itemView.findViewById<TextView>(R.id.character_name)
         private val birthdateText = itemView.findViewById<TextView>(R.id.character_birthdate)
-        private var characterDataModel: CharacterDataModel? = null
+        private var characterDataModel: CharacterDomainModel? = null
 
 
-        fun bindTo(characterDataModel: CharacterDataModel?) {
+        fun bindTo(characterDataModel: CharacterDomainModel?) {
             this.characterDataModel = characterDataModel
 
 
             nameText.text = characterDataModel?.name
             birthdateText.text = characterDataModel?.birthYear
 
-            characterCard.setOnClickListener { listenrer.onCharacterClick(characterDataModel?.url) }
+            characterCard.setOnClickListener { listener.onCharacterClick(characterDataModel?.url) }
         }
 
     }

@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 class GetSpeciesDetailsUseCase @Inject constructor(private val speciesRepository: SpeciesRepository) {
 
-    fun getSpeciesDetails(id:String):LiveData<Resource<SpeciesDomainModel>>{
+    fun execute(id:String):LiveData<Resource<SpeciesDomainModel>>{
         return speciesRepository.getSpeciesDetails(id)
     }
 }

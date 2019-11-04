@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 class GetFilmDetailsUseCase @Inject constructor(private val filmRepository: FilmRepository) {
 
-    fun getFilmDetails(id:String):LiveData<Resource<FilmDomainModel>>{
+    fun execute(id:String):LiveData<Resource<FilmDomainModel>>{
         return filmRepository.getFilmDetails(id)
     }
 }

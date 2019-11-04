@@ -2,6 +2,7 @@ package com.amjad.starwars
 
 import com.amjad.starwars.data.models.FilmLocalDataModel
 import com.amjad.starwars.data.models.FilmRemoteDataModel
+import com.amjad.starwars.data.models.PlanetDataModel
 
 object ObjectsProvider{
 
@@ -14,4 +15,7 @@ object ObjectsProvider{
 
     fun provideFilmLocalModel()= FilmLocalDataModel(1,"created","director","edited","1",
         "prod", "release","title","1", "http://www.example.com/1")
+
+    fun providePlanetRemoteModel()=PlanetDataModel("climate","created","","", listOf(),
+        "","","","", listOf(),"","","","")
 }

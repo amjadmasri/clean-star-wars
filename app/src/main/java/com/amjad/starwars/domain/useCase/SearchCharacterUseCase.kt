@@ -1,20 +1,24 @@
 package com.amjad.starwars.domain.useCase
 
-import androidx.lifecycle.LiveData
+import androidx.lifecycle.Transformations
 import androidx.paging.LivePagedListBuilder
-import androidx.paging.PagedList
-import com.amjad.starwars.data.models.CharacterDataModel
 import com.amjad.starwars.domain.models.CharacterDomainModel
-import com.amjad.starwars.domain.paging.CharacterDataSource
+import com.amjad.starwars.domain.models.PagedListing
 import com.amjad.starwars.domain.paging.CharacterDataSourceFactory
 import javax.inject.Inject
 
 class SearchCharacterUseCase @Inject constructor(private val characterDataSourceFactory: CharacterDataSourceFactory)  {
 
-    fun execute(characterName:String):LiveData<PagedList<CharacterDataModel>>{
+    fun execute(characterName:String):PagedListing<CharacterDomainModel>{
 
         characterDataSourceFactory.setSearchParameter(characterName)
-        return LivePagedListBuilder(characterDataSourceFactory,5)
+        val list =LivePagedListBuilder(characterDataSourceFactory,5)
             .build()
+
+        return PagedListing(
+            pagedList = list,
+            networkState = Transformations.switchMap(characterDataSourceFactory.sourceLiveData) {
+                it.networkState
+            })
     }
 }

@@ -9,7 +9,7 @@ import com.amjad.starwars.common.Status
 import javax.inject.Inject
 
 class GetFilmsListUseCase @Inject constructor(private val filmRepository: FilmRepository) {
-    fun getFilmsList(ids:List<String>):LiveData<Resource<FilmDomainModel>>{
+    fun execute(ids:List<String>):LiveData<Resource<FilmDomainModel>>{
         val mediatorLiveData =MediatorLiveData<Resource<FilmDomainModel>>()
         ids.forEach {
             val source =filmRepository.getFilmDetails(it)

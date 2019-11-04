@@ -1,10 +1,14 @@
 package com.amjad.starwars.domain.paging
 
+import androidx.lifecycle.MutableLiveData
 import androidx.paging.PageKeyedDataSource
+import com.amjad.starwars.common.Resource
 import com.amjad.starwars.common.utilities.UrlExtractor
+import com.amjad.starwars.data.mappers.CharacterMapper
 import com.amjad.starwars.data.models.CharacterDataModel
 import com.amjad.starwars.data.models.CharacterSearchResponse
 import com.amjad.starwars.data.remote.CharacterRemoteSource
+import com.amjad.starwars.domain.models.CharacterDomainModel
 import com.amjad.starwars.domain.repository.CharacterRepository
 import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -14,10 +18,11 @@ import retrofit2.Response
 import timber.log.Timber
 import javax.inject.Inject
 
-class CharacterDataSource @Inject constructor(private val characterRemoteSource: CharacterRemoteSource,private val urlExtractor: UrlExtractor) :
-    PageKeyedDataSource<String, CharacterDataModel>() {
+class CharacterDataSource @Inject constructor(private val characterRemoteSource: CharacterRemoteSource,private val urlExtractor: UrlExtractor,val characteraMapper: CharacterMapper) :
+    PageKeyedDataSource<String, CharacterDomainModel>() {
 
     private lateinit var name: String
+    val networkState = MutableLiveData<Resource<String>>()
 
     fun setSearchParameter(name :String){
         this.name=name
@@ -25,8 +30,10 @@ class CharacterDataSource @Inject constructor(private val characterRemoteSource:
 
     override fun loadInitial(
         params: LoadInitialParams<String>,
-        callback: LoadInitialCallback<String, CharacterDataModel>
+        callback: LoadInitialCallback<String, CharacterDomainModel>
     ) {
+
+        networkState.postValue(Resource.loading())
        characterRemoteSource.searchCharacter(name,"1")
            .subscribeOn(Schedulers.io())
            .observeOn(AndroidSchedulers.mainThread())
@@ -40,16 +47,17 @@ class CharacterDataSource @Inject constructor(private val characterRemoteSource:
                        val data = response.body()
                        val items = data?.characters
 
-                       callback.onResult(items as MutableList<CharacterDataModel>,"0",
+                       networkState.postValue(Resource.success("loaded"))
+
+                       callback.onResult(characteraMapper.mapListFromEntity(items!!) as MutableList<CharacterDomainModel>,"0",
                            data.next?.let { urlExtractor.extractPage(data.next) })
                    } else {
-
+                        networkState.postValue(Resource.error("failed"))
                    }
                }
 
                override fun onError(e: Throwable) {
-                   Timber.tag("amjadF")
-                   Timber.d(e)
+                   networkState.postValue(Resource.error(e.localizedMessage))
 
                }
            })
@@ -57,7 +65,7 @@ class CharacterDataSource @Inject constructor(private val characterRemoteSource:
 
     override fun loadAfter(
         params: LoadParams<String>,
-        callback: LoadCallback<String, CharacterDataModel>
+        callback: LoadCallback<String, CharacterDomainModel>
     ) {
         characterRemoteSource.searchCharacter(name,params.key).subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -70,16 +78,16 @@ class CharacterDataSource @Inject constructor(private val characterRemoteSource:
                     if (response.isSuccessful) {
                         val data = response.body()
                         val items = data?.characters
+                        networkState.postValue(Resource.success("loaded"))
 
-                        callback.onResult(items as MutableList<CharacterDataModel>,  data.next?.let { urlExtractor.extractPage(data.next) })
+                        callback.onResult(characteraMapper.mapListFromEntity(items!!) as MutableList<CharacterDomainModel>,  data.next?.let { urlExtractor.extractPage(data.next) })
                     } else {
-
+                        networkState.postValue(Resource.error("failed"))
                     }
                 }
 
                 override fun onError(e: Throwable) {
-                    Timber.tag("amjadF")
-                    Timber.d(e)
+                    networkState.postValue(Resource.error("failed"))
 
                 }
             })
@@ -87,7 +95,7 @@ class CharacterDataSource @Inject constructor(private val characterRemoteSource:
 
     override fun loadBefore(
         params: LoadParams<String>,
-        callback: LoadCallback<String, CharacterDataModel>
+        callback: LoadCallback<String, CharacterDomainModel>
     ) {
         //left empty
     }
