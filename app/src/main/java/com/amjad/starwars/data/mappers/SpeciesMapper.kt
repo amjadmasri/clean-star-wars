@@ -9,7 +9,7 @@ open class SpeciesMapper @Inject constructor(private val urlExtractor: UrlExtrac
     override fun mapFromEntity(entity: SpeciesDataModel): SpeciesDomainModel {
         return SpeciesDomainModel(entity.averageHeight,entity.averageLifespan,entity.classification,
             entity.created,entity.designation,entity.edited,entity.eyeColors,
-            urlExtractor.extractList(entity.films),entity.hairColors,entity.homeworld,
+            urlExtractor.extractList(entity.films),entity.hairColors,entity.homeworld?:"",
             entity.language,entity.name,
             urlExtractor.extractList(entity.people),entity.skinColors,entity.url)
     }

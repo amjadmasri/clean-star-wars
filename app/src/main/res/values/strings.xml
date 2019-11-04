@@ -6,4 +6,15 @@
     <string name="title">Title</string>
     <string name="release_date">Release Date</string>
     <string name="opening_crawl">Opening Crawl</string>
+    <string name="name">Name</string>
+    <string name="birth_date">Birth Date</string>
+    <string name="character">Character</string>
+    <string name="height_cm">Height Cm</string>
+    <string name="height_feet">Height Feet</string>
+    <string name="height_inches">Height Inches</string>
+    <string name="species">Species</string>
+    <string name="language">language</string>
+    <string name="home_world">Home world</string>
+    <string name="population">Population</string>
+    <string name="films">Films:</string>
 </resources>

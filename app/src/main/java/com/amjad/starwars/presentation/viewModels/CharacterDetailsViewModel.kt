@@ -10,15 +10,22 @@ import com.amjad.starwars.presentation.models.CharacterPresentationModel
 import javax.inject.Inject
 
 class CharacterDetailsViewModel @Inject constructor(private val getCharacterDetailsUseCase: GetCharacterDetailsUseCase,private val urlExtractor: UrlExtractor): ViewModel() {
+    private val result = MediatorLiveData<Resource<CharacterPresentationModel>>()
 
+    private fun retrieveCharacterDetails(id:String) {
 
-    fun getCharacterDetails(id:String): LiveData<Resource<CharacterPresentationModel>> {
-        val liveDataMerger = MediatorLiveData<Resource<CharacterPresentationModel>>()
-        liveDataMerger.postValue(Resource.loading(null))
+        result.postValue(Resource.loading(null))
 
-        liveDataMerger.addSource(getCharacterDetailsUseCase.execute(id)) {
-            liveDataMerger.postValue(Resource.success(it.data))
+        result.addSource(getCharacterDetailsUseCase.execute(id)) {
+            result.setValue(Resource.success(it.data))
         }
-        return liveDataMerger
+
+    }
+
+    fun getCharacterDetails(id: String): LiveData<Resource<CharacterPresentationModel>>{
+
+        retrieveCharacterDetails(id)
+
+        return result
     }
 }

@@ -23,7 +23,7 @@ data class SpeciesDataModel(
     @SerializedName("hair_colors")
     val hairColors: String,
     @SerializedName("homeworld")
-    val homeworld: String,
+    val homeworld: String?,
     @SerializedName("language")
     val language: String,
     @SerializedName("name")

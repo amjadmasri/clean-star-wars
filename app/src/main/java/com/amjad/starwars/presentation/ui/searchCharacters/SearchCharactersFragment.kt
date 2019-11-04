@@ -5,7 +5,6 @@ import android.app.SearchManager
 import android.content.Context
 import android.content.Context.SEARCH_SERVICE
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.SearchView
@@ -19,7 +18,6 @@ import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.amjad.starwars.R
 import com.amjad.starwars.common.Status
-import com.amjad.starwars.data.models.CharacterDataModel
 import com.amjad.starwars.domain.models.CharacterDomainModel
 import com.amjad.starwars.presentation.ui.base.BaseFragment
 import com.amjad.starwars.presentation.viewModels.SearchCharacterViewModel
@@ -50,12 +48,8 @@ class SearchCharactersFragment : BaseFragment(), SearchView.OnQueryTextListener,
 
     private fun renderData(data: PagedList<CharacterDomainModel>?) {
 
-        //loading.visibility = View.GONE
         charactersPagedAdapter.submitList(data)
 
-        if (!data!!.isEmpty()) {
-            Toast.makeText(activity, "No Results found ", Toast.LENGTH_LONG).show()
-        }
     }
 
     override fun getLayoutRes(): Int = R.layout.fragment_search_charracters
@@ -86,8 +80,13 @@ class SearchCharactersFragment : BaseFragment(), SearchView.OnQueryTextListener,
         viewModel = ViewModelProviders.of(this, viewModelProviderFactory)
             .get(SearchCharacterViewModel::class.java)
 
-        submitAndObserveSearch("")
+        viewModel.observeSearchResults()
+            .observe(this, Observer {
+                renderData(it)
+            })
     }
+
+
 
     private fun setupUi() {
         val manager = activity?.getSystemService(SEARCH_SERVICE) as SearchManager
@@ -132,11 +131,7 @@ class SearchCharactersFragment : BaseFragment(), SearchView.OnQueryTextListener,
     }
 
     private fun submitAndObserveSearch(name: String) {
-        viewModel.searchCharacterByName(name)
-            .observe(this, Observer {
-                renderData(it)
-
-            })
+        viewModel.setStringListener(name)
 
         viewModel.networkState.observe(this, Observer {
             when(it.status){
