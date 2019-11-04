@@ -4,7 +4,7 @@ import javax.xml.datatype.DatatypeConstants.SECONDS
 import android.R.attr.countDown
 import androidx.annotation.Nullable
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer;
+import androidx.lifecycle.Observer
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 

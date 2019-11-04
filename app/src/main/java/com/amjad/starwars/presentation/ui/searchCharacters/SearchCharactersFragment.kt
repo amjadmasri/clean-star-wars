@@ -5,6 +5,7 @@ import android.app.SearchManager
 import android.content.Context
 import android.content.Context.SEARCH_SERVICE
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.SearchView
@@ -34,6 +35,7 @@ class SearchCharactersFragment : BaseFragment(), SearchView.OnQueryTextListener,
 
 
     private fun showLoading() {
+        Log.d("wisam","show laoding")
         loading.visibility = View.VISIBLE
     }
 
@@ -84,6 +86,16 @@ class SearchCharactersFragment : BaseFragment(), SearchView.OnQueryTextListener,
             .observe(this, Observer {
                 renderData(it)
             })
+
+
+        viewModel.observeNetworkState().observe(this, Observer {
+            when(it.status){
+                Status.SUCCESS-> removeLoading()
+                Status.LOADING->showLoading()
+                Status.ERROR->showError(it.message)
+            }
+        })
+
     }
 
 
@@ -133,13 +145,7 @@ class SearchCharactersFragment : BaseFragment(), SearchView.OnQueryTextListener,
     private fun submitAndObserveSearch(name: String) {
         viewModel.setStringListener(name)
 
-        viewModel.networkState.observe(this, Observer {
-            when(it.status){
-                Status.SUCCESS-> removeLoading()
-                Status.LOADING->showLoading()
-                Status.ERROR->showError(it.message)
-            }
-        })
+
     }
 
 }

@@ -5,20 +5,17 @@ import androidx.paging.PageKeyedDataSource
 import com.amjad.starwars.common.Resource
 import com.amjad.starwars.common.utilities.UrlExtractor
 import com.amjad.starwars.data.mappers.CharacterMapper
-import com.amjad.starwars.data.models.CharacterDataModel
 import com.amjad.starwars.data.models.CharacterSearchResponse
 import com.amjad.starwars.data.remote.CharacterRemoteSource
 import com.amjad.starwars.domain.models.CharacterDomainModel
-import com.amjad.starwars.domain.repository.CharacterRepository
 import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import retrofit2.Response
-import timber.log.Timber
 import javax.inject.Inject
 
-class CharacterDataSource @Inject constructor(private val characterRemoteSource: CharacterRemoteSource,private val urlExtractor: UrlExtractor,val characteraMapper: CharacterMapper) :
+class CharacterDataSource @Inject constructor(private val characterRemoteSource: CharacterRemoteSource,private val urlExtractor: UrlExtractor,val characterMapper: CharacterMapper) :
     PageKeyedDataSource<String, CharacterDomainModel>() {
 
     private lateinit var name: String
@@ -49,7 +46,7 @@ class CharacterDataSource @Inject constructor(private val characterRemoteSource:
 
                        networkState.postValue(Resource.success("loaded"))
 
-                       callback.onResult(characteraMapper.mapListFromEntity(items!!) as MutableList<CharacterDomainModel>,"0",
+                       callback.onResult(characterMapper.mapListFromEntity(items!!) as MutableList<CharacterDomainModel>,"0",
                            data.next?.let { urlExtractor.extractPage(data.next) })
                    } else {
                         networkState.postValue(Resource.error("failed"))
@@ -80,7 +77,7 @@ class CharacterDataSource @Inject constructor(private val characterRemoteSource:
                         val items = data?.characters
                         networkState.postValue(Resource.success("loaded"))
 
-                        callback.onResult(characteraMapper.mapListFromEntity(items!!) as MutableList<CharacterDomainModel>,  data.next?.let { urlExtractor.extractPage(data.next) })
+                        callback.onResult(characterMapper.mapListFromEntity(items!!) as MutableList<CharacterDomainModel>,  data.next?.let { urlExtractor.extractPage(data.next) })
                     } else {
                         networkState.postValue(Resource.error("failed"))
                     }

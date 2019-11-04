@@ -11,10 +11,6 @@ abstract class BaseActivity : AppCompatActivity() {
     @LayoutRes
     abstract fun getLayoutId(): Int
 
-    override fun attachBaseContext(newBase: Context?) {
-        super.attachBaseContext(newBase)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         performDependencyInjection()
         super.onCreate(savedInstanceState)

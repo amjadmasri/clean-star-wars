@@ -12,10 +12,6 @@ class CharacterDiffCallBacks : DiffUtil.ItemCallback<CharacterDomainModel>() {
         return oldItem.url == newItem.url
     }
 
-    override fun getChangePayload(oldItem: CharacterDomainModel, newItem: CharacterDomainModel): Any? {
-        return super.getChangePayload(oldItem, newItem)
-    }
-
     override fun areContentsTheSame(
         oldItem: CharacterDomainModel,
         newItem: CharacterDomainModel

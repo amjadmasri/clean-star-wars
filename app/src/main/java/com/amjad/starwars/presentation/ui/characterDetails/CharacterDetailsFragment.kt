@@ -55,7 +55,7 @@ class CharacterDetailsFragment : BaseFragment() {
         characterId = CharacterDetailsFragmentArgs.fromBundle(arguments!!).characterId
 
         viewModel.getCharacterDetails(characterId)
-            .observe(this, Observer {
+            .observe(viewLifecycleOwner, Observer {
 
                 if (it.status == Status.SUCCESS) {
                     render(it.data!!)
@@ -77,8 +77,8 @@ class CharacterDetailsFragment : BaseFragment() {
         val species=data.species
         if (species != null) {
             species_loading.hide()
-            species_name_text.text = species?.name
-            language_text.text = species?.language
+            species_name_text.text = species.name
+            language_text.text = species.language
         }
 
         if (species?.homeworld != null) {

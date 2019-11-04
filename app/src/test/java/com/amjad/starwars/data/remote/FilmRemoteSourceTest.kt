@@ -29,7 +29,7 @@ class FilmRemoteSourceTest{
     fun setup() {
         filmRemoteSource= FilmRemoteSourceImp(apiService)
 
-        Mockito.`when`(apiService.getfilmDetails(ArgumentMatchers.anyString())).thenReturn(Single.just(response))
+        `when`(apiService.getfilmDetails(ArgumentMatchers.anyString())).thenReturn(Single.just(response))
     }
 
     @Test
@@ -50,9 +50,9 @@ class FilmRemoteSourceTest{
     @Test
     fun testRemoteSourceSuccess(){
         val obj =ObjectsProvider.provideFilmRemoteModel()
-        Mockito.`when`(apiService.getfilmDetails("1")).thenReturn(Single.just(response))
-        Mockito.`when`(response.isSuccessful).thenReturn(true)
-        Mockito.`when`(response.body()).thenReturn(obj)
+        `when`(apiService.getfilmDetails("1")).thenReturn(Single.just(response))
+        `when`(response.isSuccessful).thenReturn(true)
+        `when`(response.body()).thenReturn(obj)
 
         filmRemoteSource.getFilmDetails("1")
             .test()
@@ -63,9 +63,9 @@ class FilmRemoteSourceTest{
     fun testRemoteSourceError(){
         val obj =ObjectsProvider.provideFilmRemoteModel()
         val throwable = mock(Throwable::class.java)
-        Mockito.`when`(apiService.getfilmDetails("1")).thenReturn(Single.error(throwable))
-        Mockito.`when`(response.isSuccessful).thenReturn(true)
-        Mockito.`when`(response.body()).thenReturn(obj)
+        `when`(apiService.getfilmDetails("1")).thenReturn(Single.error(throwable))
+        `when`(response.isSuccessful).thenReturn(true)
+        `when`(response.body()).thenReturn(obj)
 
         filmRemoteSource.getFilmDetails("1")
             .test()
