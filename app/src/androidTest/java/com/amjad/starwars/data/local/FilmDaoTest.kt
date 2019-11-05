@@ -19,7 +19,7 @@ import com.amjad.starwars.data.utilities.ObjectsProvider
 import io.reactivex.Completable
 import org.hamcrest.Matchers
 import org.junit.Rule
-
+import java.util.*
 
 
 @RunWith(AndroidJUnit4::class)
@@ -115,7 +115,8 @@ class SimpleEntityReadWriteTest {
             "date",
             "title2",
             "1",
-            "url"
+            "url",
+            Date().time
         )
 
         filmDao.insert(filmLocalDataModel)

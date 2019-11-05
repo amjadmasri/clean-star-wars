@@ -18,6 +18,7 @@ import org.mockito.Mockito
 import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 import java.io.IOException
+import java.util.*
 
 @RunWith(AndroidJUnit4::class)
 class FilmLocalSourceResponseTest {
@@ -60,7 +61,8 @@ class FilmLocalSourceResponseTest {
             "date",
             "title",
             "1",
-            "url"
+            "url",
+            Date().time
         )
         assertThat(filmLocalSource.insertFilm(filmLocalDataModel),instanceOf(Completable::class.java))
 

@@ -29,6 +29,11 @@ android {
         unitTests.returnDefaultValues = true
     }
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
 }
 
 dependencies {
@@ -39,6 +44,7 @@ dependencies {
     def paging_version = "2.1.0"
 
     def room_version = "2.2.1"
+
 
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
@@ -87,18 +93,17 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxjava:2.2.9'
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
 
-    debugImplementation 'com.amitshekhar.android:debug-db:1.0.4'
 
     testImplementation "androidx.room:room-testing:$room_version"
 
     // dependencies for local unit tests
-    testImplementation "org.mockito:mockito-core:3.0.0"
+    testImplementation "org.mockito:mockito-core:3.1.0"
     testImplementation "android.arch.core:core-testing:1.1.1"
     testAnnotationProcessor "com.google.dagger:dagger-compiler:2.24"
 
     // UI Testing
     androidTestImplementation "androidx.test.espresso:espresso-intents:3.2.0"
-    androidTestImplementation "org.mockito:mockito-core:3.0.0"
+    androidTestImplementation "org.mockito:mockito-core:3.1.0"
     androidTestAnnotationProcessor "com.google.dagger:dagger-compiler:2.24"
     androidTestImplementation "android.arch.core:core-testing:1.1.1"
 
@@ -106,6 +111,9 @@ dependencies {
     androidTestImplementation "androidx.test:core:1.2.0"
 
     testImplementation 'com.jraska.livedata:testing-ktx:1.1.1'
+    debugImplementation('androidx.fragment:fragment-testing:1.1.0') {
+        transitive = false
+    }
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'

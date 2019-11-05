@@ -13,6 +13,7 @@ import com.amjad.starwars.domain.models.FilmDomainModel
 import com.amjad.starwars.domain.repository.FilmRepository
 import com.amjad.starwars.common.Resource
 import com.amjad.starwars.common.Status
+import com.amjad.starwars.data.models.isExpiredAfterOneDay
 import io.reactivex.Completable
 import io.reactivex.Single
 import retrofit2.Response
@@ -30,7 +31,7 @@ class FilmRepositoryImp @Inject constructor(
             }
 
             override fun loadFromDb(): LiveData<FilmLocalDataModel> {
-                Log.d("saed","loading from db id is "+id)
+
                return filmLocalSource.getFilmById(id)
             }
 
@@ -39,19 +40,19 @@ class FilmRepositoryImp @Inject constructor(
             }
 
           override fun shouldFetch(data: FilmLocalDataModel?): Boolean {
-              Log.d("saed","should fetch "+(data==null))
-              return data==null
+              return data?.isExpiredAfterOneDay() ?: true
           }
       }.asLiveData
        return Transformations.map(result){ input ->
-           Log.d("saed111",input.status.toString())
+
            mapLocalToDomain(input)
        }
 
     }
 
+
     private fun mapLocalToDomain(input: Resource<FilmLocalDataModel>): Resource<FilmDomainModel> {
-        Log.d("saed",input.data.toString())
+        Log.d("wisam","being called ?")
         return when(input.status){
             Status.SUCCESS-> Resource.success(input.data?.let { filmMapper.mapLocalToDomain(it) })
             Status.LOADING-> Resource.loading()

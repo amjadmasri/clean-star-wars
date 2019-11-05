@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 import com.amjad.starwars.data.local.dao.FilmDao
 import com.amjad.starwars.data.models.FilmLocalDataModel
 
-@Database(entities = [FilmLocalDataModel::class], version = 2)
+@Database(entities = [FilmLocalDataModel::class], version = 3)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun filmDao(): FilmDao
 }

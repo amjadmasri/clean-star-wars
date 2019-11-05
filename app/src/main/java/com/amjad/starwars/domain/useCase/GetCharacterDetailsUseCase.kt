@@ -66,7 +66,8 @@ class GetCharacterDetailsUseCase @Inject constructor(
         val filmSource = getFilmsListUseCase.execute(ids)
         mediatorLiveData.addSource(filmSource) { films ->
             if (films.status == Status.SUCCESS) {
-                characterDetails.films.add(films.data!!)
+                if (!characterDetails.films.contains(films.data!!))
+                    characterDetails.films.add(films.data!!)
 
                 mediatorLiveData.postValue(Resource.success(characterDetails))
             }

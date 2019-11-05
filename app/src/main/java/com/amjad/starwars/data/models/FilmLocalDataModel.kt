@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
+import java.util.*
 
 @Entity(tableName = "films", indices = [Index(value = ["episodeId"], unique = true)])
 data class FilmLocalDataModel(
@@ -19,5 +20,15 @@ data class FilmLocalDataModel(
     val releaseDate: String,
     val title: String,
     val resourceId:String,
-    val url: String
+    val url: String,
+    val localCreationDate:Long
 )
+
+fun FilmLocalDataModel.isExpiredAfterOneDay():Boolean{
+    val currentDate = Date()
+    val calendar = Calendar.getInstance()
+    calendar.time= Date(localCreationDate)
+    calendar.add(Calendar.HOUR,24)
+
+    return currentDate >= calendar.time
+}
