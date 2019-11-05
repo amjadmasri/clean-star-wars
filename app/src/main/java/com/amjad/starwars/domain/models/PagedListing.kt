@@ -2,7 +2,7 @@ package com.amjad.starwars.domain.models
 
 import androidx.lifecycle.LiveData
 import androidx.paging.PagedList
-import com.amjad.starwars.common.Resource
+import com.amjad.starwars.common.models.Resource
 
 data class PagedListing<T>(
     // the LiveData of paged lists for the UI to observe

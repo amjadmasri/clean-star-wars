@@ -1,4 +1,4 @@
-package com.amjad.starwars.common
+package com.amjad.starwars.common.models
 
 enum class Status {
     SUCCESS,

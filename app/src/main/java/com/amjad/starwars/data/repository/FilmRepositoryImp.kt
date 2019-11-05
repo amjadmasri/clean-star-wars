@@ -1,6 +1,6 @@
 package com.amjad.starwars.data.repository
 
-import android.util.Log
+
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import com.amjad.starwars.data.local.FilmLocalSource
@@ -11,8 +11,8 @@ import com.amjad.starwars.data.models.NetworkBoundResource
 import com.amjad.starwars.data.remote.FilmRemoteSource
 import com.amjad.starwars.domain.models.FilmDomainModel
 import com.amjad.starwars.domain.repository.FilmRepository
-import com.amjad.starwars.common.Resource
-import com.amjad.starwars.common.Status
+import com.amjad.starwars.common.models.Resource
+import com.amjad.starwars.common.models.Status
 import com.amjad.starwars.data.models.isExpiredAfterOneDay
 import io.reactivex.Completable
 import io.reactivex.Single
@@ -52,7 +52,6 @@ class FilmRepositoryImp @Inject constructor(
 
 
     private fun mapLocalToDomain(input: Resource<FilmLocalDataModel>): Resource<FilmDomainModel> {
-        Log.d("wisam","being called ?")
         return when(input.status){
             Status.SUCCESS-> Resource.success(input.data?.let { filmMapper.mapLocalToDomain(it) })
             Status.LOADING-> Resource.loading()

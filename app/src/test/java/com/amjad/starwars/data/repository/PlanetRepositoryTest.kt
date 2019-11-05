@@ -1,31 +1,21 @@
 package com.amjad.starwars.data.repository
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import com.amjad.starwars.ObjectsProvider
-import com.amjad.starwars.common.Resource
+import com.amjad.starwars.common.models.Resource
 import com.amjad.starwars.data.mappers.PlanetMapper
 import com.amjad.starwars.data.models.PlanetDataModel
 import com.amjad.starwars.data.remote.PlanetRemoteSourceImp
 import com.amjad.starwars.domain.models.PlanetDomainModel
-import com.amjad.starwars.getOrAwaitValue
-import com.amjad.starwars.mock
 import com.amjad.starwars.observeForTesting
-import com.jraska.livedata.TestObserver
-import com.jraska.livedata.test
 import io.reactivex.Single
 import junit.framework.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentCaptor
-import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.Mockito
-import org.mockito.Mockito.times
-import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 import retrofit2.Response
 
@@ -64,7 +54,7 @@ class PlanetRepositoryTest {
         Mockito.`when`(response.isSuccessful).thenReturn(true)
         Mockito.`when`(response.body()).thenReturn(obj)
         val liveDataViewModel= planetRepositoryImp.getPlanetDetails("1")
-        val resource:Resource<PlanetDomainModel> = Resource.loading()
+        val resource: Resource<PlanetDomainModel> = Resource.loading()
         liveDataViewModel .observeForTesting{
             assertEquals(liveDataViewModel.value,resource )
         }

@@ -5,7 +5,7 @@ import android.app.SearchManager
 import android.content.Context
 import android.content.Context.SEARCH_SERVICE
 import android.os.Bundle
-import android.util.Log
+
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.SearchView
@@ -18,7 +18,7 @@ import androidx.navigation.Navigation
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.amjad.starwars.R
-import com.amjad.starwars.common.Status
+import com.amjad.starwars.common.models.Status
 import com.amjad.starwars.domain.models.CharacterDomainModel
 import com.amjad.starwars.presentation.ui.base.BaseFragment
 import com.amjad.starwars.presentation.viewModels.SearchCharacterViewModel
@@ -35,7 +35,6 @@ class SearchCharactersFragment : BaseFragment(), SearchView.OnQueryTextListener,
 
 
     private fun showLoading() {
-        Log.d("wisam","show laoding")
         loading.visibility = View.VISIBLE
     }
 

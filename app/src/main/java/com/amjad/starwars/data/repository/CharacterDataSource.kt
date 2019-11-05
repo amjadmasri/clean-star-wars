@@ -1,8 +1,8 @@
-package com.amjad.starwars.domain.paging
+package com.amjad.starwars.data.repository
 
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PageKeyedDataSource
-import com.amjad.starwars.common.Resource
+import com.amjad.starwars.common.models.Resource
 import com.amjad.starwars.common.utilities.UrlExtractor
 import com.amjad.starwars.data.mappers.CharacterMapper
 import com.amjad.starwars.data.models.CharacterSearchResponse

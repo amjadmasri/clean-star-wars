@@ -3,8 +3,8 @@ package com.amjad.starwars.presentation.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
-import com.amjad.starwars.common.Resource
-import com.amjad.starwars.common.Status
+import com.amjad.starwars.common.models.Resource
+import com.amjad.starwars.common.models.Status
 import com.amjad.starwars.domain.useCase.GetCharacterDetailsUseCase
 import com.amjad.starwars.presentation.models.CharacterPresentationModel
 import javax.inject.Inject

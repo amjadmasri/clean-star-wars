@@ -1,11 +1,10 @@
 package com.amjad.starwars.domain.useCase
 
-import android.annotation.SuppressLint
-import android.util.Log
+
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
-import com.amjad.starwars.common.Resource
-import com.amjad.starwars.common.Status
+import com.amjad.starwars.common.models.Resource
+import com.amjad.starwars.common.models.Status
 import com.amjad.starwars.domain.mappers.CharacterPresentationMapper
 import com.amjad.starwars.domain.mappers.SpeciesPresentationMapper
 import com.amjad.starwars.domain.repository.CharacterRepository
@@ -37,7 +36,7 @@ class GetCharacterDetailsUseCase @Inject constructor(
 
                 getFilmsDetails(it.data.films)
             }
-            else if (it.status==Status.ERROR){
+            else if (it.status== Status.ERROR){
                 mediatorLiveData.postValue(Resource.error("couldn't load character details"))
             }
         }
@@ -56,7 +55,7 @@ class GetCharacterDetailsUseCase @Inject constructor(
                   getSpeciesHomeworldDetails(species.data.homeworld)
                 }
             }
-            else if (species.status==Status.ERROR){
+            else if (species.status== Status.ERROR){
                 mediatorLiveData.postValue(Resource.error("couldn't load species details"))
             }
         }
@@ -71,7 +70,7 @@ class GetCharacterDetailsUseCase @Inject constructor(
 
                 mediatorLiveData.postValue(Resource.success(characterDetails))
             }
-            else if (films.status==Status.ERROR){
+            else if (films.status== Status.ERROR){
                 mediatorLiveData.postValue(Resource.error("couldn't load films details"))
             }
         }

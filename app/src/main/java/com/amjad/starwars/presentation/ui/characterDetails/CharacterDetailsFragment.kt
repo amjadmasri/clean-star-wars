@@ -3,7 +3,6 @@ package com.amjad.starwars.presentation.ui.characterDetails
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.Observer
@@ -12,7 +11,7 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.amjad.starwars.R
-import com.amjad.starwars.common.Status
+import com.amjad.starwars.common.models.Status
 import com.amjad.starwars.presentation.models.CharacterPresentationModel
 import com.amjad.starwars.presentation.ui.base.BaseFragment
 import com.amjad.starwars.presentation.viewModels.CharacterDetailsViewModel
@@ -60,7 +59,7 @@ class CharacterDetailsFragment : BaseFragment() {
                 if (it.status == Status.SUCCESS) {
                     render(it.data!!)
                 }
-                else if (it.status==Status.ERROR){
+                else if (it.status== Status.ERROR){
                     Toast.makeText(activity,it.message,Toast.LENGTH_LONG).show()
                 }
             })

@@ -2,12 +2,11 @@ package com.amjad.starwars.data.models
 
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.annotation.MainThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
-import com.amjad.starwars.common.Resource
+import com.amjad.starwars.common.models.Resource
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.SingleObserver
@@ -77,7 +76,6 @@ constructor() {
                     result.addSource(
                         loadFromDb()
                     ) { newData ->
-                        Log.d("saed","loading from new data ")
                         result.setValue(Resource.success(newData))
                     }
                 }

@@ -4,7 +4,7 @@ import androidx.lifecycle.Transformations
 import androidx.paging.LivePagedListBuilder
 import com.amjad.starwars.domain.models.CharacterDomainModel
 import com.amjad.starwars.domain.models.PagedListing
-import com.amjad.starwars.domain.paging.CharacterDataSourceFactory
+import com.amjad.starwars.data.repository.CharacterDataSourceFactory
 import javax.inject.Inject
 
 class SearchCharacterUseCase @Inject constructor(private val characterDataSourceFactory: CharacterDataSourceFactory)  {

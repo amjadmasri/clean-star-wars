@@ -1,8 +1,7 @@
-package com.amjad.starwars.domain.paging
+package com.amjad.starwars.data.repository
 
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
-import com.amjad.starwars.data.models.CharacterDataModel
 import com.amjad.starwars.domain.models.CharacterDomainModel
 import javax.inject.Inject
 

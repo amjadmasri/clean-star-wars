@@ -2,7 +2,7 @@ package com.amjad.starwars.presentation.viewModels
 
 import androidx.lifecycle.*
 import androidx.paging.PagedList
-import com.amjad.starwars.common.Resource
+import com.amjad.starwars.common.models.Resource
 import com.amjad.starwars.domain.models.CharacterDomainModel
 import com.amjad.starwars.domain.useCase.SearchCharacterUseCase
 import javax.inject.Inject

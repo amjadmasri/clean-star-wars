@@ -1,6 +1,6 @@
 package com.amjad.starwars.data.repository
 
-import android.util.Log
+
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.amjad.starwars.data.mappers.CharacterMapper
@@ -9,7 +9,7 @@ import com.amjad.starwars.data.models.CharacterSearchResponse
 import com.amjad.starwars.data.remote.CharacterRemoteSource
 import com.amjad.starwars.domain.models.CharacterDomainModel
 import com.amjad.starwars.domain.repository.CharacterRepository
-import com.amjad.starwars.common.Resource
+import com.amjad.starwars.common.models.Resource
 import io.reactivex.Single
 import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -44,7 +44,6 @@ class CharacterRepositoryImp @Inject constructor(
                 override fun onSuccess(response: Response<CharacterDataModel>) {
                     if (response.isSuccessful) {
                         val data = response.body()
-                        Log.d("saed","in is success on usccesss")
                         result.postValue(Resource.success(characterMapper.mapFromEntity(data!!)))
 
                     } else {
