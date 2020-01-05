@@ -16,6 +16,9 @@ import com.amjad.starwars.presentation.models.CharacterPresentationModel
 import com.amjad.starwars.presentation.ui.base.BaseFragment
 import com.amjad.starwars.presentation.viewModels.CharacterDetailsViewModel
 import com.amjad.starwars.presentation.viewModels.ViewModelProviderFactory
+import io.reactivex.Scheduler
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_character_details.*
 import javax.inject.Inject
 import javax.inject.Provider
@@ -54,15 +57,12 @@ class CharacterDetailsFragment : BaseFragment() {
         characterId = CharacterDetailsFragmentArgs.fromBundle(arguments!!).characterId
 
         viewModel.getCharacterDetails(characterId)
-            .observe(viewLifecycleOwner, Observer {
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                render(it)
+            }
 
-                if (it.status == Status.SUCCESS) {
-                    render(it.data!!)
-                }
-                else if (it.status== Status.ERROR){
-                    Toast.makeText(activity,it.message,Toast.LENGTH_LONG).show()
-                }
-            })
     }
 
     private fun render(data: CharacterPresentationModel) {

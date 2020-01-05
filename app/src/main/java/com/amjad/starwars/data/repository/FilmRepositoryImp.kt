@@ -1,22 +1,18 @@
 package com.amjad.starwars.data.repository
 
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations
+import android.annotation.SuppressLint
+import android.util.Log
+import androidx.room.EmptyResultSetException
 import com.amjad.starwars.data.local.FilmLocalSource
 import com.amjad.starwars.data.mappers.FilmMapper
 import com.amjad.starwars.data.models.FilmLocalDataModel
-import com.amjad.starwars.data.models.FilmRemoteDataModel
-import com.amjad.starwars.data.models.NetworkBoundResource
+import com.amjad.starwars.data.models.isExpiredAfterOneDay
 import com.amjad.starwars.data.remote.FilmRemoteSource
 import com.amjad.starwars.domain.models.FilmDomainModel
 import com.amjad.starwars.domain.repository.FilmRepository
-import com.amjad.starwars.common.models.Resource
-import com.amjad.starwars.common.models.Status
-import com.amjad.starwars.data.models.isExpiredAfterOneDay
-import io.reactivex.Completable
+import io.reactivex.Observable
 import io.reactivex.Single
-import retrofit2.Response
 import javax.inject.Inject
 
 class FilmRepositoryImp @Inject constructor(
@@ -24,39 +20,36 @@ class FilmRepositoryImp @Inject constructor(
     private val filmLocalSource: FilmLocalSource,
     private val filmMapper: FilmMapper
 ) : FilmRepository {
-    override fun getFilmDetails(id: String): LiveData<Resource<FilmDomainModel>> {
-      val result:LiveData<Resource<FilmLocalDataModel>> = object : NetworkBoundResource<FilmLocalDataModel, FilmRemoteDataModel>(){
-            override fun saveCallResult(item: FilmRemoteDataModel): Completable {
-                return filmLocalSource.insertFilm(filmMapper.mapRemoteToLocal(item))
+    override fun getFilmDetails(id: String): Observable<FilmDomainModel> {
+
+        return filmLocalSource.getFilmById(id)
+            .onErrorResumeNext { if(it is EmptyResultSetException) {
+                Log.d("amjad","first if empty")
+                Single.just(FilmLocalDataModel(1, "", "", "", "", "", "", "", "", "", 0))
             }
-
-            override fun loadFromDb(): LiveData<FilmLocalDataModel> {
-
-               return filmLocalSource.getFilmById(id)
+            else {
+                Log.d("amjad","first else empty")
+                Single.error(it)
             }
-
-            override fun createCall(): Single<Response<FilmRemoteDataModel>> {
-                return filmRemoteSource.getFilmDetails(id)
             }
-
-          override fun shouldFetch(data: FilmLocalDataModel?): Boolean {
-              return data?.isExpiredAfterOneDay() ?: true
-          }
-      }.asLiveData
-       return Transformations.map(result){ input ->
-
-           mapLocalToDomain(input)
-       }
-
-    }
-
-
-    private fun mapLocalToDomain(input: Resource<FilmLocalDataModel>): Resource<FilmDomainModel> {
-        return when(input.status){
-            Status.SUCCESS-> Resource.success(input.data?.let { filmMapper.mapLocalToDomain(it) })
-            Status.LOADING-> Resource.loading()
-            Status.ERROR-> Resource.error(input.message.toString())
-        }
+            .flatMapObservable {
+                if (it.localCreationDate==0L && it.isExpiredAfterOneDay()) {
+                    Log.d("amjad","here")
+                    filmRemoteSource.getFilmDetails(id)
+                        .flatMapObservable { response ->
+                            filmLocalSource.insertFilm(filmMapper.mapRemoteToLocal(response.body()!!))
+                                .subscribe()
+                            filmLocalSource.getFilmById(id)
+                                .flatMapObservable { filmLocalDataModel ->
+                                    Observable.just(
+                                        filmMapper.mapLocalToDomain(filmLocalDataModel)
+                                    )
+                                }
+                        }
+                }
+                else
+                    Observable.just(filmMapper.mapLocalToDomain(it))
+            }
     }
 
 }

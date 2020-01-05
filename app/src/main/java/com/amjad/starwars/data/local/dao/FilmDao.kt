@@ -6,7 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.amjad.starwars.data.models.FilmLocalDataModel
-import io.reactivex.Completable
+import io.reactivex.*
 
 @Dao
 interface FilmDao {
@@ -18,6 +18,6 @@ interface FilmDao {
     fun insert(flmLocalDataModel: FilmLocalDataModel): Completable
 
     @Query("SELECT * from films where  resourceId=:id")
-    fun getFilmByResourceId(id:String): LiveData<FilmLocalDataModel>
+    fun getFilmByResourceId(id:String): Single<FilmLocalDataModel>
 
 }

@@ -2,7 +2,7 @@ package com.amjad.starwars.data.local
 
 import androidx.lifecycle.LiveData
 import com.amjad.starwars.data.models.FilmLocalDataModel
-import io.reactivex.Completable
+import io.reactivex.*
 import javax.inject.Inject
 
 class FilmLocalSourceImp @Inject constructor(private val appDatabase: AppDatabase):FilmLocalSource {
@@ -10,7 +10,7 @@ class FilmLocalSourceImp @Inject constructor(private val appDatabase: AppDatabas
         return appDatabase.filmDao().insert(filmLocalDataModel)
     }
 
-    override fun getFilmById(id: String): LiveData<FilmLocalDataModel> {
+    override fun getFilmById(id: String): Single<FilmLocalDataModel> {
        return appDatabase.filmDao().getFilmByResourceId(id)
     }
 }

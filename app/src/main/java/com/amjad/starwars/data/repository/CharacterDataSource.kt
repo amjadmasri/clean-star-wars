@@ -29,9 +29,8 @@ class CharacterDataSource @Inject constructor(private val characterRemoteSource:
         params: LoadInitialParams<String>,
         callback: LoadInitialCallback<String, CharacterDomainModel>
     ) {
-
         networkState.postValue(Resource.loading())
-       characterRemoteSource.searchCharacter(name,"1")
+        characterRemoteSource.searchCharacter(name,"1")
            .subscribeOn(Schedulers.io())
            .observeOn(AndroidSchedulers.mainThread())
            .subscribe(object : SingleObserver<Response<CharacterSearchResponse>> {
@@ -64,6 +63,7 @@ class CharacterDataSource @Inject constructor(private val characterRemoteSource:
         params: LoadParams<String>,
         callback: LoadCallback<String, CharacterDomainModel>
     ) {
+        networkState.postValue(Resource.loading())
         characterRemoteSource.searchCharacter(name,params.key).subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : SingleObserver<Response<CharacterSearchResponse>> {
@@ -73,9 +73,10 @@ class CharacterDataSource @Inject constructor(private val characterRemoteSource:
 
                 override fun onSuccess(response: Response<CharacterSearchResponse>) {
                     if (response.isSuccessful) {
+                        networkState.postValue(Resource.success("loaded"))
                         val data = response.body()
                         val items = data?.characters
-                        networkState.postValue(Resource.success("loaded"))
+
 
                         callback.onResult(characterMapper.mapListFromEntity(items!!) as MutableList<CharacterDomainModel>,  data.next?.let { urlExtractor.extractPage(data.next) })
                     } else {
@@ -84,7 +85,7 @@ class CharacterDataSource @Inject constructor(private val characterRemoteSource:
                 }
 
                 override fun onError(e: Throwable) {
-                    networkState.postValue(Resource.error("failed"))
+                    networkState.postValue(Resource.error(e.localizedMessage))
 
                 }
             })

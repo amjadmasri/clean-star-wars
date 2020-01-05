@@ -10,6 +10,7 @@ import com.amjad.starwars.data.remote.CharacterRemoteSource
 import com.amjad.starwars.domain.models.CharacterDomainModel
 import com.amjad.starwars.domain.repository.CharacterRepository
 import com.amjad.starwars.common.models.Resource
+import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -29,33 +30,15 @@ class CharacterRepositoryImp @Inject constructor(
         return characterRemoteSource.searchCharacter(name, page)
     }
 
-    override fun getCharacterDetails(id: String): LiveData<Resource<CharacterDomainModel>> {
+    override fun getCharacterDetails(id: String): Observable<CharacterDomainModel> {
 
-        val result: MutableLiveData<Resource<CharacterDomainModel>> = MutableLiveData()
-        result.postValue(Resource.loading())
-        characterRemoteSource.getCharacterDetails(id)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(object : SingleObserver<Response<CharacterDataModel>> {
-                override fun onSubscribe(d: Disposable) {
 
-                }
+        return characterRemoteSource.getCharacterDetails(id)
+            .flatMapObservable { Observable.just(it.body()?.let { characterDataModel ->
+                characterMapper.mapFromEntity(
+                    characterDataModel
+                )
+            }) }
 
-                override fun onSuccess(response: Response<CharacterDataModel>) {
-                    if (response.isSuccessful) {
-                        val data = response.body()
-                        result.postValue(Resource.success(characterMapper.mapFromEntity(data!!)))
-
-                    } else {
-                        result.postValue(Resource.error("there was an error"))
-                    }
-                }
-
-                override fun onError(e: Throwable) {
-                    result.postValue(Resource.error(e.localizedMessage))
-                }
-            })
-
-        return result
     }
 }
