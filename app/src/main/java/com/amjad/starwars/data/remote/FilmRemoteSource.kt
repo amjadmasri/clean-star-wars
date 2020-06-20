@@ -6,5 +6,5 @@ import retrofit2.Response
 
 interface FilmRemoteSource {
 
-    fun getFilmDetails(id: String): Single<Response<FilmRemoteDataModel>>
+    fun getFilmDetails(id: String): Single<FilmRemoteDataModel>
 }

@@ -1,6 +1,7 @@
 package com.amjad.starwars.data.models
 
 
+import android.util.Log
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey

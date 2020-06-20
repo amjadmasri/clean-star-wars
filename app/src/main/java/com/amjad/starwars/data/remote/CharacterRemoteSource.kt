@@ -7,7 +7,9 @@ import retrofit2.Response
 
 interface CharacterRemoteSource {
 
-    fun searchCharacter(name :String,page:String):Single<Response<CharacterSearchResponse>>
+    fun searchCharacter(name :String):Single<CharacterSearchResponse>
 
-    fun getCharacterDetails(id:String):Single<Response<CharacterDataModel>>
+    fun getCharacterDetails(id:String):Single<CharacterDataModel>
+
+    fun getMoreCharacters(url:String):Single<CharacterSearchResponse>
 }

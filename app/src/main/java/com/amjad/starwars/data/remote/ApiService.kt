@@ -6,21 +6,25 @@ import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
+import retrofit2.http.Url
 
 interface ApiService {
 
-    @GET("people/{character_id}")
-    fun getCharacterDetails(@Path("character_id")characterId:String):Single<Response<CharacterDataModel>>
+    @GET
+    fun getCharacterDetails(@Url url :String):Single<CharacterDataModel>
 
-    @GET("species/{species_id}")
-    fun getSpeciesDetails(@Path("species_id")speciesId:String):Single<Response<SpeciesDataModel>>
+    @GET
+    fun getSpeciesDetails(@Url url :String):Single<SpeciesDataModel>
 
-    @GET("films/{film_id}")
-    fun getfilmDetails(@Path("film_id")filmId:String):Single<Response<FilmRemoteDataModel>>
+    @GET
+    fun getFilmDetails(@Url url :String):Single<FilmRemoteDataModel>
 
-    @GET("planets/{planet_id}")
-    fun getplanetDetails(@Path("planet_id")planetId:String):Single<Response<PlanetDataModel>>
+    @GET
+    fun getPlanetDetails(@Url url :String):Single<PlanetDataModel>
 
     @GET("people/")
-    fun searchCharacterByName(@Query("search")name:String,@Query("page")page:String?):Single<Response<CharacterSearchResponse>>
+    fun searchCharacterByName(@Query("search")name:String):Single<CharacterSearchResponse>
+
+    @GET
+    fun getMoreCharacters(@Url url :String):Single<CharacterSearchResponse>
 }

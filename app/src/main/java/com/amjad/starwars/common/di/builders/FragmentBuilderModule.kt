@@ -11,9 +11,9 @@ import dagger.android.ContributesAndroidInjector
 abstract class FragmentBuilderModule {
 
     @ContributesAndroidInjector(modules = [CharacterAdapterModule::class])
-    abstract fun contributeSearchCharractersFragment(): SearchCharactersFragment
+    abstract fun contributeSearchCharactersFragment(): SearchCharactersFragment
 
     @ContributesAndroidInjector(modules = [FilmAdapterModule::class])
-    abstract fun contributeCharracterDetailsFragment(): CharacterDetailsFragment
+    abstract fun contributeCharacterDetailsFragment(): CharacterDetailsFragment
 
 }

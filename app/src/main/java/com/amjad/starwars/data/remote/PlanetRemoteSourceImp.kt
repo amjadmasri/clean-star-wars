@@ -6,7 +6,7 @@ import retrofit2.Response
 import javax.inject.Inject
 
 class PlanetRemoteSourceImp @Inject constructor(private val apiService: ApiService) :PlanetRemoteSource{
-    override fun getPlanetDetails(id: String): Single<Response<PlanetDataModel>> {
-        return apiService.getplanetDetails(id)
+    override fun getPlanetDetails(id: String): Single<PlanetDataModel> {
+        return apiService.getPlanetDetails(id)
     }
 }

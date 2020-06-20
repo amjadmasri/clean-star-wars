@@ -1,9 +1,11 @@
 package com.amjad.starwars.domain.useCase
 
 
+import com.amjad.starwars.domain.extensions.toResult
 import com.amjad.starwars.domain.mappers.CharacterPresentationMapper
 import com.amjad.starwars.domain.models.CharacterDomainModel
 import com.amjad.starwars.domain.models.FilmDomainModel
+import com.amjad.starwars.domain.models.Result
 import com.amjad.starwars.domain.repository.CharacterRepository
 import com.amjad.starwars.presentation.models.CharacterPresentationModel
 import com.amjad.starwars.presentation.models.SpeciesPresentationModel
@@ -19,23 +21,30 @@ class GetCharacterDetailsUseCase @Inject constructor(
     private val characterPresentationMapper: CharacterPresentationMapper
 ) {
 
-    fun execute(id: String): Observable<CharacterPresentationModel> {
+    fun execute(id: String): Observable<Result<CharacterPresentationModel>> {
 
         return characterRepository.getCharacterDetails(id)
-            .concatMap {
-                zip<CharacterDomainModel, SpeciesPresentationModel, List<FilmDomainModel>, CharacterPresentationModel>(
-                    Observable.just(it),
-                    getSpeciesDetailsUseCase.execute(it.species[0]),
-                    getFilmsListUseCase.execute(it.films),
-                    Function3<CharacterDomainModel, SpeciesPresentationModel, List<FilmDomainModel>, CharacterPresentationModel> { t1, t2, t3 ->
-                        val presentation = characterPresentationMapper.fromDomainToPresentation(t1)
-                        presentation.species = t2
-                        presentation.films = t3.toMutableList()
+            .concatMap { character ->
+                zip(
+                    Observable.just(character),
+                    getSpeciesDetailsUseCase.execute(character.species.getOrNull(0)?:""),
+                    getFilmsListUseCase.execute(character.films),
+                    Function3<CharacterDomainModel, Result<SpeciesPresentationModel>, Result<List<FilmDomainModel>>, Result<CharacterPresentationModel>> {
+                            characterDomainModel, speciesPresentationModel, filmList ->
+                        val presentation = characterPresentationMapper.fromDomainToPresentation(characterDomainModel)
+                        when (speciesPresentationModel){
+                            is Result.OnSuccess-> presentation.species = speciesPresentationModel.data
+                        }
+                        when(filmList){
+                            is Result.OnSuccess ->presentation.films = filmList.data
+                        }
 
-                        return@Function3 presentation
+                        return@Function3 presentation.toResult()
                     }
                 )
+
             }
+
     }
 
 }

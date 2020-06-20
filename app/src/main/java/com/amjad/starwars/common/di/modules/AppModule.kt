@@ -2,12 +2,12 @@ package com.amjad.starwars.common.di.modules
 
 import android.content.Context
 import androidx.room.Room
+import com.amjad.starwars.BuildConfig
 import com.amjad.starwars.common.StarWarsChallengeApplication
 import com.amjad.starwars.common.di.interfaces.ApiUrlInfo
 import com.amjad.starwars.common.di.interfaces.DatabaseInfo
 import com.amjad.starwars.common.di.interfaces.DateFormatInfo
 import com.amjad.starwars.common.utilities.AppConstants
-import com.amjad.starwars.common.utilities.UrlExtractor
 import com.amjad.starwars.data.local.AppDatabase
 import com.amjad.starwars.data.remote.ApiService
 import com.google.gson.Gson
@@ -27,11 +27,11 @@ class AppModule {
 
     @Provides
     @DatabaseInfo
-    fun provideDatabaseName(): String = AppConstants.DB_NAME
+    fun provideDatabaseName(): String = BuildConfig.DB_NAME
 
     @Provides
     @ApiUrlInfo
-    fun provideApiURlInfo(): String = AppConstants.API_BASE_URL
+    fun provideApiURlInfo(): String = BuildConfig.BASE_URL
 
     @Provides
     @DateFormatInfo
@@ -100,7 +100,4 @@ class AppModule {
         .setDateFormat(dateFormat)
         .create()
 
-
-    @Provides
-    fun provideUrlExtractor() :UrlExtractor =UrlExtractor()
 }

@@ -1,12 +1,7 @@
 package com.amjad.starwars.data.di
 
-import com.amjad.starwars.common.utilities.UrlExtractor
 import com.amjad.starwars.data.local.FilmLocalSource
 import com.amjad.starwars.data.local.FilmLocalSourceImp
-import com.amjad.starwars.data.mappers.CharacterMapper
-import com.amjad.starwars.data.mappers.FilmMapper
-import com.amjad.starwars.data.mappers.PlanetMapper
-import com.amjad.starwars.data.mappers.SpeciesMapper
 import com.amjad.starwars.data.remote.*
 import com.amjad.starwars.data.repository.CharacterRepositoryImp
 import com.amjad.starwars.data.repository.FilmRepositoryImp
@@ -16,59 +11,37 @@ import com.amjad.starwars.domain.repository.CharacterRepository
 import com.amjad.starwars.domain.repository.FilmRepository
 import com.amjad.starwars.domain.repository.PlanetRepository
 import com.amjad.starwars.domain.repository.SpeciesRepository
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
 
 @Module
-class DataModule {
+abstract class DataModule {
 
-    @Provides
-    fun provideCharacterRemoteSource(characterRemoteSource: CharacterRemoteSourceImp): CharacterRemoteSource =
-        characterRemoteSource
+    @Binds
+    abstract fun provideCharacterRemoteSource(characterRemoteSource: CharacterRemoteSourceImp): CharacterRemoteSource
 
-    @Provides
-    fun provideCharacterRepository(characterRepositoryImp: CharacterRepositoryImp): CharacterRepository =
-        characterRepositoryImp
+    @Binds
+    abstract fun provideCharacterRepository(characterRepositoryImp: CharacterRepositoryImp): CharacterRepository
 
-    @Provides
-    fun provideCharacterMapper(urlExtractor: UrlExtractor): CharacterMapper = CharacterMapper(urlExtractor)
+    @Binds
+    abstract fun providePlanetRemoteSource(planetRemoteSource: PlanetRemoteSourceImp): PlanetRemoteSource
 
+    @Binds
+    abstract fun providePlanetRepository(planetRepositoryImp: PlanetRepositoryImp): PlanetRepository
 
-    @Provides
-    fun providePlanetRemoteSource(planetRemoteSource: PlanetRemoteSourceImp): PlanetRemoteSource =
-        planetRemoteSource
+    @Binds
+    abstract fun provideSpeciesRemoteSource(speciesRemoteSourceImp: SpeciesRemoteSourceImp): SpeciesRemoteSource
 
-    @Provides
-    fun providePlanetRepository(planetRepositoryImp: PlanetRepositoryImp): PlanetRepository =
-        planetRepositoryImp
+    @Binds
+    abstract fun provideSpeciesRepository(speciesRepositoryImp: SpeciesRepositoryImp): SpeciesRepository
 
-    @Provides
-    fun providePlanetMapper(urlExtractor: UrlExtractor): PlanetMapper = PlanetMapper(urlExtractor)
+    @Binds
+    abstract fun provideFilmRemoteSource(planetRemoteSource: FilmRemoteSourceImp): FilmRemoteSource
 
+    @Binds
+    abstract fun provideFilmLocalSource(filmLocalSourceImp: FilmLocalSourceImp): FilmLocalSource
 
-    @Provides
-    fun provideSpeciesRemoteSource(speciesRemoteSourceImp: SpeciesRemoteSourceImp): SpeciesRemoteSource =
-        speciesRemoteSourceImp
+    @Binds
+    abstract fun provideFilmRepository(filmRepositoryImp: FilmRepositoryImp): FilmRepository
 
-    @Provides
-    fun provideSpeciesRepository(speciesRepositoryImp: SpeciesRepositoryImp): SpeciesRepository =
-        speciesRepositoryImp
-
-    @Provides
-    fun provideSpeciesMapper(urlExtractor: UrlExtractor): SpeciesMapper = SpeciesMapper(urlExtractor)
-
-    @Provides
-    fun provideFilmRemoteSource(planetRemoteSource: FilmRemoteSourceImp): FilmRemoteSource =
-        planetRemoteSource
-
-    @Provides
-    fun provideFilmLocalSource(filmLocalSourceImp: FilmLocalSourceImp): FilmLocalSource =
-        filmLocalSourceImp
-
-    @Provides
-    fun provideFilmRepository(filmRepositoryImp: FilmRepositoryImp): FilmRepository =
-        filmRepositoryImp
-
-    @Provides
-    fun provideFilmMapper(urlExtractor: UrlExtractor): FilmMapper = FilmMapper(urlExtractor)
 }

@@ -7,11 +7,17 @@ import com.amjad.starwars.domain.models.PagedListing
 import com.amjad.starwars.data.repository.CharacterDataSourceFactory
 import javax.inject.Inject
 
-class SearchCharacterUseCase @Inject constructor(private val characterDataSourceFactory: CharacterDataSourceFactory)  {
+class SearchCharacterUseCase @Inject constructor(private val characterDataSourceFactoryFactory: CharacterDataSourceFactory.Factory)  {
+
+    private val characterDataSourceFactory :CharacterDataSourceFactory by lazy {
+        characterDataSourceFactoryFactory.create(characterName)
+    }
+
+    private lateinit var characterName:String
 
     fun execute(characterName:String):PagedListing<CharacterDomainModel>{
 
-        characterDataSourceFactory.setSearchParameter(characterName)
+        this.characterName= characterName
         val list =LivePagedListBuilder(characterDataSourceFactory,5)
             .build()
 

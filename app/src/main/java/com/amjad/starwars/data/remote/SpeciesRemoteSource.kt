@@ -6,5 +6,5 @@ import retrofit2.Response
 
 interface SpeciesRemoteSource {
 
-    fun getSpeciesDetails(id: String): Single<Response<SpeciesDataModel>>
+    fun getSpeciesDetails(id: String): Single<SpeciesDataModel>
 }

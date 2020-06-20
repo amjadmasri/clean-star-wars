@@ -8,7 +8,7 @@ import retrofit2.Response
 
 interface CharacterRepository {
 
-    fun searchCharacter(name: String, page: String): Single<Response<CharacterSearchResponse>>
+    fun searchCharacter(name: String): Single<CharacterSearchResponse>
 
     fun getCharacterDetails(id: String): Observable<CharacterDomainModel>
 }

@@ -1,8 +1,6 @@
 package com.amjad.starwars.domain.models
 
 
-import com.google.gson.annotations.SerializedName
-
 data class CharacterDomainModel(
     val birthYear: String,
     val created: String,
@@ -12,7 +10,7 @@ data class CharacterDomainModel(
     val gender: String,
     val hairColor: String,
     val height: String,
-    val homeworld: String,
+    val homeWorld: String,
     val mass: String,
     val name: String,
     val skinColor: String,

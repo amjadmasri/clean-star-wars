@@ -10,7 +10,7 @@ apply plugin: "androidx.navigation.safeargs.kotlin"
 
 android {
     compileSdkVersion 29
-    buildToolsVersion "29.0.2"
+    buildToolsVersion "29.0.3"
     defaultConfig {
         applicationId "com.amjad.starwars"
         minSdkVersion 19
@@ -18,11 +18,18 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField "String", 'BASE_URL', '"https://swapi.dev/api/"'
+        buildConfigField "String",'DB_NAME' ,'"starWar_challenge.db"'
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            buildConfigField "String", 'BASE_URL', '"https://swapi.dev/api/"'
         }
     }
     testOptions {
@@ -55,11 +62,11 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.core:core-ktx:1.1.0'
+    implementation 'androidx.core:core-ktx:1.3.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
 
-    implementation "com.google.android.material:material:1.0.0"
+    implementation "com.google.android.material:material:1.1.0"
 
     implementation "androidx.room:room-rxjava2:$room_version"
 
@@ -70,51 +77,54 @@ dependencies {
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
-    implementation 'com.squareup.okhttp3:okhttp:4.2.2'
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.2.2'
+    implementation 'com.squareup.okhttp3:okhttp:4.7.2'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.7.2'
 
 
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.1.0'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
     kapt "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
 
 
-    implementation "com.google.dagger:dagger:2.24"
+    implementation "com.google.dagger:dagger:2.27"
     implementation 'com.google.dagger:dagger-android:2.24'
-    kapt "com.google.dagger:dagger-compiler:2.24"
+    kapt "com.google.dagger:dagger-compiler:2.27"
     implementation 'com.google.dagger:dagger-android-support:2.24'
     kapt 'com.google.dagger:dagger-android-processor:2.24'
 
 
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.9'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.16'
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+
+    compileOnly 'com.squareup.inject:assisted-inject-annotations-dagger2:0.5.2'
+    kapt  'com.squareup.inject:assisted-inject-processor-dagger2:0.5.2'
 
 
     testImplementation "androidx.room:room-testing:$room_version"
 
     // dependencies for local unit tests
-    testImplementation "org.mockito:mockito-core:3.1.0"
+    testImplementation "org.mockito:mockito-core:3.3.3"
     testImplementation "android.arch.core:core-testing:1.1.1"
-    testAnnotationProcessor "com.google.dagger:dagger-compiler:2.24"
+    testAnnotationProcessor "com.google.dagger:dagger-compiler:2.27"
 
     // UI Testing
     androidTestImplementation "androidx.test.espresso:espresso-intents:3.2.0"
-    androidTestImplementation "org.mockito:mockito-core:3.1.0"
-    androidTestAnnotationProcessor "com.google.dagger:dagger-compiler:2.24"
+    androidTestImplementation "org.mockito:mockito-core:3.3.3"
+    androidTestAnnotationProcessor "com.google.dagger:dagger-compiler:2.27"
     androidTestImplementation "android.arch.core:core-testing:1.1.1"
 
     androidTestImplementation "androidx.test:runner:1.2.0"
     androidTestImplementation "androidx.test:core:1.2.0"
 
     testImplementation 'com.jraska.livedata:testing-ktx:1.1.1'
-    debugImplementation('androidx.fragment:fragment-testing:1.1.0') {
+    debugImplementation('androidx.fragment:fragment-testing:1.2.5') {
         transitive = false
     }
 
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }

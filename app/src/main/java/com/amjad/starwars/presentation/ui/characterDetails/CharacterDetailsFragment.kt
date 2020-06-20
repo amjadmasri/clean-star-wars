@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
@@ -18,6 +19,7 @@ import com.amjad.starwars.presentation.viewModels.CharacterDetailsViewModel
 import com.amjad.starwars.presentation.viewModels.ViewModelProviderFactory
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_character_details.*
 import javax.inject.Inject
@@ -43,6 +45,7 @@ class CharacterDetailsFragment : BaseFragment() {
     private lateinit var navController: NavController
 
     private lateinit var characterId: String
+    private val disposable :CompositeDisposable = CompositeDisposable()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -51,17 +54,17 @@ class CharacterDetailsFragment : BaseFragment() {
 
         navController = Navigation.findNavController(view)
 
-        viewModel = ViewModelProviders.of(this, viewModelProviderFactory)
+        viewModel = ViewModelProvider(this, viewModelProviderFactory)
             .get(CharacterDetailsViewModel::class.java)
 
         characterId = CharacterDetailsFragmentArgs.fromBundle(arguments!!).characterId
 
         viewModel.getCharacterDetails(characterId)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe {
+
+        viewModel.observeCharacterResult()
+            .observe(viewLifecycleOwner, Observer {
                 render(it)
-            }
+            })
 
     }
 

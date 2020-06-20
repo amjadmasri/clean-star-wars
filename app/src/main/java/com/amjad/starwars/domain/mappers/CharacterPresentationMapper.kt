@@ -2,14 +2,15 @@ package com.amjad.starwars.domain.mappers
 
 import com.amjad.starwars.domain.models.CharacterDomainModel
 import com.amjad.starwars.presentation.models.CharacterPresentationModel
+import javax.inject.Inject
 import kotlin.math.round
 
-class CharacterPresentationMapper {
+class CharacterPresentationMapper @Inject constructor(){
 
-     fun fromDomainToPresentation(data: CharacterDomainModel?): CharacterPresentationModel {
+     fun fromDomainToPresentation(data: CharacterDomainModel): CharacterPresentationModel {
 
         return CharacterPresentationModel(
-            data!!.birthYear,
+            data.birthYear,
             data.created,
             data.edited,
             data.eyeColor,
@@ -33,7 +34,7 @@ class CharacterPresentationMapper {
 
     private fun calculateHeightFeet(height: String): String =(0.0328  * height.toDouble()).round(1).toString()
 
-    fun Double.round(decimals: Int): Double {
+    private fun Double.round(decimals: Int): Double {
         var multiplier = 1.0
         repeat(decimals) { multiplier *= 10 }
         return round(this * multiplier) / multiplier

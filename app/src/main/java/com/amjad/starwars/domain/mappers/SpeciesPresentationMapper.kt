@@ -2,8 +2,9 @@ package com.amjad.starwars.domain.mappers
 
 import com.amjad.starwars.domain.models.SpeciesDomainModel
 import com.amjad.starwars.presentation.models.SpeciesPresentationModel
+import javax.inject.Inject
 
-class SpeciesPresentationMapper {
+class SpeciesPresentationMapper @Inject constructor() {
 
     fun fromDomainToPresentation(model: SpeciesDomainModel):SpeciesPresentationModel{
         return SpeciesPresentationModel(

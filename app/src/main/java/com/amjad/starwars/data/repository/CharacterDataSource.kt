@@ -1,94 +1,80 @@
 package com.amjad.starwars.data.repository
 
+import android.annotation.SuppressLint
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PageKeyedDataSource
 import com.amjad.starwars.common.models.Resource
-import com.amjad.starwars.common.utilities.UrlExtractor
 import com.amjad.starwars.data.mappers.CharacterMapper
 import com.amjad.starwars.data.models.CharacterSearchResponse
 import com.amjad.starwars.data.remote.CharacterRemoteSource
 import com.amjad.starwars.domain.models.CharacterDomainModel
+import com.squareup.inject.assisted.Assisted
+import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import retrofit2.Response
-import javax.inject.Inject
 
-class CharacterDataSource @Inject constructor(private val characterRemoteSource: CharacterRemoteSource,private val urlExtractor: UrlExtractor,val characterMapper: CharacterMapper) :
+class CharacterDataSource @AssistedInject constructor(
+    private val characterRemoteSource: CharacterRemoteSource,
+    val characterMapper: CharacterMapper,
+    @Assisted private val name: String
+) :
     PageKeyedDataSource<String, CharacterDomainModel>() {
 
-    private lateinit var name: String
     val networkState = MutableLiveData<Resource<String>>()
 
-    fun setSearchParameter(name :String){
-        this.name=name
-    }
 
     override fun loadInitial(
         params: LoadInitialParams<String>,
         callback: LoadInitialCallback<String, CharacterDomainModel>
     ) {
         networkState.postValue(Resource.loading())
-        characterRemoteSource.searchCharacter(name,"1")
-           .subscribeOn(Schedulers.io())
-           .observeOn(AndroidSchedulers.mainThread())
-           .subscribe(object : SingleObserver<Response<CharacterSearchResponse>> {
-               override fun onSubscribe(d: Disposable) {
+        characterRemoteSource.searchCharacter(name)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : SingleObserver<CharacterSearchResponse> {
+                override fun onSubscribe(d: Disposable) {
 
-               }
+                }
 
-               override fun onSuccess(response: Response<CharacterSearchResponse>) {
-                   if (response.isSuccessful) {
-                       val data = response.body()
-                       val items = data?.characters
+                override fun onSuccess(response: CharacterSearchResponse) {
+                    networkState.postValue(Resource.success("loaded"))
+                    callback.onResult(
+                        characterMapper.mapListFromEntity(response.characters), "0",
+                        response.next
+                    )
+                }
 
-                       networkState.postValue(Resource.success("loaded"))
+                override fun onError(e: Throwable) {
+                    networkState.postValue(Resource.error(e.localizedMessage!!))
 
-                       callback.onResult(characterMapper.mapListFromEntity(items!!) as MutableList<CharacterDomainModel>,"0",
-                           data.next?.let { urlExtractor.extractPage(data.next) })
-                   } else {
-                        networkState.postValue(Resource.error("failed"))
-                   }
-               }
-
-               override fun onError(e: Throwable) {
-                   networkState.postValue(Resource.error(e.localizedMessage))
-
-               }
-           })
+                }
+            })
     }
 
+    @SuppressLint("CheckResult")
     override fun loadAfter(
         params: LoadParams<String>,
         callback: LoadCallback<String, CharacterDomainModel>
     ) {
         networkState.postValue(Resource.loading())
-        characterRemoteSource.searchCharacter(name,params.key).subscribeOn(Schedulers.io())
+        characterRemoteSource.getMoreCharacters(params.key).subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : SingleObserver<Response<CharacterSearchResponse>> {
-                override fun onSubscribe(d: Disposable) {
+            .subscribe(
+                { response ->
+                    networkState.postValue(Resource.success("loaded"))
+                    callback.onResult(
+                        characterMapper.mapListFromEntity(response.characters),
+                        response.next
+                    )
+                }
+                ,
+                {
+                    networkState.postValue(Resource.error(it.localizedMessage!!))
 
                 }
-
-                override fun onSuccess(response: Response<CharacterSearchResponse>) {
-                    if (response.isSuccessful) {
-                        networkState.postValue(Resource.success("loaded"))
-                        val data = response.body()
-                        val items = data?.characters
-
-
-                        callback.onResult(characterMapper.mapListFromEntity(items!!) as MutableList<CharacterDomainModel>,  data.next?.let { urlExtractor.extractPage(data.next) })
-                    } else {
-                        networkState.postValue(Resource.error("failed"))
-                    }
-                }
-
-                override fun onError(e: Throwable) {
-                    networkState.postValue(Resource.error(e.localizedMessage))
-
-                }
-            })
+            )
     }
 
     override fun loadBefore(
@@ -96,5 +82,10 @@ class CharacterDataSource @Inject constructor(private val characterRemoteSource:
         callback: LoadCallback<String, CharacterDomainModel>
     ) {
         //left empty
+    }
+
+    @AssistedInject.Factory
+    interface Factory {
+        fun create(name: String): CharacterDataSource
     }
 }

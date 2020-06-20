@@ -8,13 +8,16 @@ import javax.inject.Inject
 
 class CharacterRemoteSourceImp @Inject constructor(private val apiService:ApiService) :CharacterRemoteSource{
     override fun searchCharacter(
-        name: String,
-        page: String
-    ): Single<Response<CharacterSearchResponse>> {
-       return apiService.searchCharacterByName(name,page)
+        name: String
+    ): Single<CharacterSearchResponse> {
+       return apiService.searchCharacterByName(name)
     }
 
-    override fun getCharacterDetails(id: String): Single<Response<CharacterDataModel>> {
+    override fun getCharacterDetails(id: String): Single<CharacterDataModel> {
        return apiService.getCharacterDetails(id)
+    }
+
+    override fun getMoreCharacters(url: String): Single<CharacterSearchResponse> {
+        return apiService.getMoreCharacters(url)
     }
 }

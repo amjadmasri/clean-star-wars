@@ -1,8 +1,6 @@
 package com.amjad.starwars.domain.models
 
 
-import com.google.gson.annotations.SerializedName
-
 data class SpeciesDomainModel(
     val averageHeight: String,
     val averageLifespan: String,
@@ -13,7 +11,7 @@ data class SpeciesDomainModel(
     val eyeColors: String,
     val films: List<String>,
     val hairColors: String,
-    val homeworld: String,
+    val homeWorld: String,
     val language: String,
     val name: String,
     val people: List<String>,

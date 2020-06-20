@@ -6,7 +6,7 @@ import retrofit2.Response
 import javax.inject.Inject
 
 class SpeciesRemoteSourceImp @Inject constructor(private val apiService: ApiService) :SpeciesRemoteSource{
-    override fun getSpeciesDetails(id: String): Single<Response<SpeciesDataModel>> {
+    override fun getSpeciesDetails(id: String): Single<SpeciesDataModel> {
         return apiService.getSpeciesDetails(id)
     }
 }

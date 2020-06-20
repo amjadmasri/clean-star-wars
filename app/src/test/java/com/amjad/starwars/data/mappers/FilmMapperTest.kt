@@ -1,32 +1,21 @@
 package com.amjad.starwars.data.mappers
 
 import com.amjad.starwars.ObjectsProvider
-import com.amjad.starwars.common.utilities.UrlExtractor
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.junit.runners.JUnit4
-import org.mockito.ArgumentMatchers.anyString
-import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
 class FilmMapperTest {
 
-    @Mock
-    lateinit var urlExtractor: UrlExtractor
 
     private lateinit var filmMapper: FilmMapper
 
     @Before
     fun setup(){
-        filmMapper =FilmMapper(urlExtractor)
-        Mockito.`when`(urlExtractor.extractList(listOf("1"))).thenReturn(listOf("1"))
-
-        Mockito.`when`(urlExtractor.extract("http://www.example.com/1")).thenReturn("1")
+        filmMapper =FilmMapper()
     }
 
     @Test
@@ -62,7 +51,6 @@ class FilmMapperTest {
         assertEquals(obj.producer,result.producer)
         assertEquals(obj.releaseDate,result.releaseDate)
         assertEquals(obj.title,result.title)
-        verify(urlExtractor).extract(obj.url)
         assertEquals("1",result.resourceId)
         assertEquals(obj.url,result.url)
     }

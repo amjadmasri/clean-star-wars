@@ -5,5 +5,5 @@ import io.reactivex.Single
 
 interface PlanetRemoteSource {
 
-    fun getPlanetDetails(id: String): Single<retrofit2.Response<PlanetDataModel>>
+    fun getPlanetDetails(id: String): Single<PlanetDataModel>
 }

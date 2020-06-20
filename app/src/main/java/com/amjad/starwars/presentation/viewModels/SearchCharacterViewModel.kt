@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 
 class SearchCharacterViewModel @Inject constructor(private val searchCharacterUseCase: SearchCharacterUseCase) :
-    ViewModel() {
+    BaseViewModel() {
     private var networkState: MediatorLiveData<Resource<String>> = MediatorLiveData<Resource<String>>()
     private val currentSearchString: MutableLiveData<String> = MutableLiveData()
 

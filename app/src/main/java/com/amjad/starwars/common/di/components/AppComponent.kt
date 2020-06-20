@@ -4,6 +4,7 @@ import com.amjad.starwars.common.StarWarsChallengeApplication
 import com.amjad.starwars.common.di.builders.ActivityBuilderModule
 import com.amjad.starwars.common.di.builders.FragmentBuilderModule
 import com.amjad.starwars.common.di.modules.AppModule
+import com.amjad.starwars.common.di.modules.AssistedInjectModule
 import com.amjad.starwars.common.di.modules.ViewModelModule
 import com.amjad.starwars.data.di.DataModule
 import com.amjad.starwars.domain.di.DomainModule
@@ -22,7 +23,8 @@ import javax.inject.Singleton
         ActivityBuilderModule::class,
         FragmentBuilderModule::class,
         DataModule::class,
-        DomainModule::class
+        DomainModule::class,
+        AssistedInjectModule::class
     ]
 )
 interface AppComponent : AndroidInjector<StarWarsChallengeApplication> {
