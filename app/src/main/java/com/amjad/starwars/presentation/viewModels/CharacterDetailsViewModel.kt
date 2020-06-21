@@ -20,11 +20,11 @@ class CharacterDetailsViewModel @Inject constructor(private val getCharacterDeta
 
     private val errorMessage: MutableLiveData<String> = MutableLiveData()
 
-    fun observeCharacterResult() :LiveData<CharacterPresentationModel> = result
-    fun observeSpeciesDetails() :LiveData<SpeciesPresentationModel> = speciesDetails
-    fun observeFilmList() :LiveData<List<FilmDomainModel>> = filmList
+    fun observeCharacterResult(): LiveData<CharacterPresentationModel> = result
+    fun observeSpeciesDetails(): LiveData<SpeciesPresentationModel> = speciesDetails
+    fun observeFilmList(): LiveData<List<FilmDomainModel>> = filmList
 
-    fun observeErrorMessage():LiveData<String> = errorMessage
+    fun observeErrorMessage(): LiveData<String> = errorMessage
     fun getCharacterDetails(id: String) {
 
         disposable += getCharacterDetailsUseCase.execute(id)
@@ -35,13 +35,13 @@ class CharacterDetailsViewModel @Inject constructor(private val getCharacterDeta
                     is Result.OnSuccess -> {
                         result.value = it.data
 
-                        it.data.species?.let { species->
-                            speciesDetails.value=species
+                        it.data.species?.let { species ->
+                            speciesDetails.value = species
                         }
 
-                        if(it.data.films.isNotEmpty())filmList.value=it.data.films
+                        if (it.data.films.isNotEmpty()) filmList.value = it.data.films
                     }
-                    is Result.OnError -> errorMessage.value=it.starWarsError.message
+                    is Result.OnError -> errorMessage.value = it.starWarsError.message
                 }
             }
     }

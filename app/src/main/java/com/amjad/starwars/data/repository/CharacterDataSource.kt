@@ -1,13 +1,10 @@
 package com.amjad.starwars.data.repository
 
 import android.annotation.SuppressLint
-import androidx.lifecycle.MutableLiveData
 import androidx.paging.PageKeyedDataSource
-import com.amjad.starwars.common.models.Resource
 import com.amjad.starwars.data.mappers.CharacterMapper
 import com.amjad.starwars.data.models.CharacterSearchResponse
 import com.amjad.starwars.data.remote.ApiService
-import com.amjad.starwars.data.remote.CharacterRemoteSource
 import com.amjad.starwars.domain.models.CharacterDomainModel
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
@@ -23,14 +20,11 @@ class CharacterDataSource @AssistedInject constructor(
 ) :
     PageKeyedDataSource<String, CharacterDomainModel>() {
 
-    val networkState = MutableLiveData<Resource<String>>()
-
 
     override fun loadInitial(
         params: LoadInitialParams<String>,
         callback: LoadInitialCallback<String, CharacterDomainModel>
     ) {
-        networkState.postValue(Resource.loading())
         apiService.searchCharacterByName(name)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -40,7 +34,6 @@ class CharacterDataSource @AssistedInject constructor(
                 }
 
                 override fun onSuccess(response: CharacterSearchResponse) {
-                    networkState.postValue(Resource.success("loaded"))
                     callback.onResult(
                         characterMapper.mapListFromEntity(response.characters), "0",
                         response.next
@@ -48,8 +41,6 @@ class CharacterDataSource @AssistedInject constructor(
                 }
 
                 override fun onError(e: Throwable) {
-                    networkState.postValue(Resource.error(e.localizedMessage!!))
-
                 }
             })
     }
@@ -59,12 +50,10 @@ class CharacterDataSource @AssistedInject constructor(
         params: LoadParams<String>,
         callback: LoadCallback<String, CharacterDomainModel>
     ) {
-        networkState.postValue(Resource.loading())
         apiService.getMoreCharacters(params.key).subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { response ->
-                    networkState.postValue(Resource.success("loaded"))
                     callback.onResult(
                         characterMapper.mapListFromEntity(response.characters),
                         response.next
@@ -72,8 +61,6 @@ class CharacterDataSource @AssistedInject constructor(
                 }
                 ,
                 {
-                    networkState.postValue(Resource.error(it.localizedMessage!!))
-
                 }
             )
     }

@@ -36,13 +36,6 @@ fun <T> T.toResult(): Result<T> {
     return Result.OnSuccess(this)
 }
 
-fun <T> Result<T>.toDataObservable(): Observable<T> {
-    return when (this) {
-        is Result.OnSuccess -> Observable.just(this.data)
-        is Result.OnError -> Observable.error(this.starWarsError.toThrowable())
-    }
-}
-
 fun <T> List<T>.filterIfNotEmpty(value: List<Any>, predicate: (T) -> Boolean): List<T> {
     return when {
         value.isNullOrEmpty() -> this

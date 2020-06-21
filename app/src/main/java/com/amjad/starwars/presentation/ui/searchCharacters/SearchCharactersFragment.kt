@@ -5,7 +5,6 @@ import android.app.SearchManager
 import android.content.Context
 import android.content.Context.SEARCH_SERVICE
 import android.os.Bundle
-import android.util.Log
 
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -20,7 +19,6 @@ import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.amjad.starwars.R
 import com.amjad.starwars.common.extensions.plusAssign
-import com.amjad.starwars.common.models.Status
 import com.amjad.starwars.domain.models.CharacterDomainModel
 import com.amjad.starwars.presentation.ui.base.BaseFragment
 import com.amjad.starwars.presentation.viewModels.SearchCharacterViewModel

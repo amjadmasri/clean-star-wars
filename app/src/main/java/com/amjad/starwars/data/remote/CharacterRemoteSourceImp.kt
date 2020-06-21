@@ -1,14 +1,11 @@
 package com.amjad.starwars.data.remote
 
-import androidx.lifecycle.Transformations
-import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import androidx.paging.RxPagedListBuilder
 import com.amjad.starwars.data.models.CharacterDataModel
 import com.amjad.starwars.data.models.CharacterSearchResponse
 import com.amjad.starwars.data.repository.CharacterDataSourceFactory
 import com.amjad.starwars.domain.models.CharacterDomainModel
-import com.amjad.starwars.domain.models.PagedListing
 import io.reactivex.Observable
 import io.reactivex.Single
 import javax.inject.Inject
