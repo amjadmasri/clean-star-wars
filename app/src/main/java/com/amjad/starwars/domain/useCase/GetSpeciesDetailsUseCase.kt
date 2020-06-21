@@ -25,7 +25,7 @@ class GetSpeciesDetailsUseCase @Inject constructor(
                             val presentation =
                                 speciesPresentationMapper.fromDomainToPresentation(speciesDomainModel)
                             when(planetDomainModel){
-                                is Result.OnSuccess ->  presentation.homeworld = planetDomainModel.data
+                                is Result.OnSuccess ->  presentation.homeWorld = planetDomainModel.data
                             }
                             return@BiFunction presentation.toResult()
                         })

@@ -6,6 +6,7 @@ import androidx.paging.PageKeyedDataSource
 import com.amjad.starwars.common.models.Resource
 import com.amjad.starwars.data.mappers.CharacterMapper
 import com.amjad.starwars.data.models.CharacterSearchResponse
+import com.amjad.starwars.data.remote.ApiService
 import com.amjad.starwars.data.remote.CharacterRemoteSource
 import com.amjad.starwars.domain.models.CharacterDomainModel
 import com.squareup.inject.assisted.Assisted
@@ -16,7 +17,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
 class CharacterDataSource @AssistedInject constructor(
-    private val characterRemoteSource: CharacterRemoteSource,
+    private val apiService: ApiService,
     val characterMapper: CharacterMapper,
     @Assisted private val name: String
 ) :
@@ -30,7 +31,7 @@ class CharacterDataSource @AssistedInject constructor(
         callback: LoadInitialCallback<String, CharacterDomainModel>
     ) {
         networkState.postValue(Resource.loading())
-        characterRemoteSource.searchCharacter(name)
+        apiService.searchCharacterByName(name)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : SingleObserver<CharacterSearchResponse> {
@@ -59,7 +60,7 @@ class CharacterDataSource @AssistedInject constructor(
         callback: LoadCallback<String, CharacterDomainModel>
     ) {
         networkState.postValue(Resource.loading())
-        characterRemoteSource.getMoreCharacters(params.key).subscribeOn(Schedulers.io())
+        apiService.getMoreCharacters(params.key).subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { response ->

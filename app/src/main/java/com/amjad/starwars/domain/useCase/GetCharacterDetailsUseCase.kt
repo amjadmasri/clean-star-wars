@@ -27,6 +27,10 @@ class GetCharacterDetailsUseCase @Inject constructor(
             .concatMap { character ->
                 zip(
                     Observable.just(character),
+                    /**
+                     * star wars api has an error where human characters return empty species
+                     * but api doc says they shouldn't have empty species relationship
+                     */
                     getSpeciesDetailsUseCase.execute(character.species.getOrNull(0)?:""),
                     getFilmsListUseCase.execute(character.films),
                     Function3<CharacterDomainModel, Result<SpeciesPresentationModel>, Result<List<FilmDomainModel>>, Result<CharacterPresentationModel>> {
@@ -44,6 +48,7 @@ class GetCharacterDetailsUseCase @Inject constructor(
                 )
 
             }
+            .onErrorReturn { it.toResult() }
 
     }
 

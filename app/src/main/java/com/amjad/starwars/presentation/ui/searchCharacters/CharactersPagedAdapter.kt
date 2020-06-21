@@ -29,7 +29,7 @@ class CharactersPagedAdapter(characterDiffCallBacks: CharacterDiffCallBacks) :
 
     interface CharacterAdapterListener {
 
-        fun onCharacterClick(id:String?)
+        fun onCharacterClick(id:String)
     }
 
 
@@ -41,17 +41,13 @@ class CharactersPagedAdapter(characterDiffCallBacks: CharacterDiffCallBacks) :
         private val characterCard =itemView.findViewById<CardView>(R.id.character_card)
         private val nameText = itemView.findViewById<TextView>(R.id.character_name)
         private val birthdateText = itemView.findViewById<TextView>(R.id.character_birthdate)
-        private var characterDataModel: CharacterDomainModel? = null
-
 
         fun bindTo(characterDataModel: CharacterDomainModel?) {
-            this.characterDataModel = characterDataModel
-
-
-            nameText.text = characterDataModel?.name
-            birthdateText.text = characterDataModel?.birthYear
-
-            characterCard.setOnClickListener { listener.onCharacterClick(characterDataModel?.url) }
+            characterDataModel?.let {
+                nameText.text = characterDataModel.name
+                birthdateText.text = characterDataModel.birthYear
+                characterCard.setOnClickListener { listener.onCharacterClick(characterDataModel.url) }
+            }
         }
 
     }

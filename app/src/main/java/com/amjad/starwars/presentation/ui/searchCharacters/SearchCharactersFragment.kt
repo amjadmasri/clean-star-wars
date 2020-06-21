@@ -5,6 +5,7 @@ import android.app.SearchManager
 import android.content.Context
 import android.content.Context.SEARCH_SERVICE
 import android.os.Bundle
+import android.util.Log
 
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -13,46 +14,32 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.amjad.starwars.R
+import com.amjad.starwars.common.extensions.plusAssign
 import com.amjad.starwars.common.models.Status
 import com.amjad.starwars.domain.models.CharacterDomainModel
 import com.amjad.starwars.presentation.ui.base.BaseFragment
 import com.amjad.starwars.presentation.viewModels.SearchCharacterViewModel
 import com.amjad.starwars.presentation.viewModels.ViewModelProviderFactory
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.fragment_search_charracters.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Provider
 
 /**
  * A simple [Fragment] subclass.
  */
-class SearchCharactersFragment : BaseFragment(), SearchView.OnQueryTextListener,
+class SearchCharactersFragment : BaseFragment(),
     CharactersPagedAdapter.CharacterAdapterListener {
-
-
-    private fun showLoading() {
-        loading.visibility = View.VISIBLE
-    }
-
-    private fun removeLoading(){
-        loading.visibility=View.GONE
-    }
-
-    private fun showError(message:String?){
-        removeLoading()
-        Toast.makeText(activity, message?:"there was an error", Toast.LENGTH_LONG).show()
-    }
-
-    private fun renderData(data: PagedList<CharacterDomainModel>?) {
-
-        charactersPagedAdapter.submitList(data)
-
-    }
 
     override fun getLayoutRes(): Int = R.layout.fragment_search_charracters
 
@@ -72,6 +59,8 @@ class SearchCharactersFragment : BaseFragment(), SearchView.OnQueryTextListener,
 
     private lateinit var navController: NavController
 
+    private val disposable:CompositeDisposable = CompositeDisposable()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -87,14 +76,10 @@ class SearchCharactersFragment : BaseFragment(), SearchView.OnQueryTextListener,
                 renderData(it)
             })
 
-
-        viewModel.observeNetworkState().observe(viewLifecycleOwner, Observer {
-            when(it.status){
-                Status.SUCCESS-> removeLoading()
-                Status.LOADING->showLoading()
-                Status.ERROR->showError(it.message)
-            }
-        })
+        viewModel.observeErrorMessage()
+            .observe(viewLifecycleOwner, Observer {
+                showError(it)
+            })
 
     }
 
@@ -108,7 +93,15 @@ class SearchCharactersFragment : BaseFragment(), SearchView.OnQueryTextListener,
         searchView.imeOptions = options or EditorInfo.IME_FLAG_NO_EXTRACT_UI
         searchView.setSearchableInfo(si)
 
-        searchView.setOnQueryTextListener(this)
+        disposable+=createObservableFromView(searchView)
+            .debounce(200, TimeUnit.MILLISECONDS)
+            .filter { text -> text.isNotEmpty() }
+            .distinctUntilChanged()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                submitAndObserveSearch(it)
+            }
 
         character_recycler.layoutManager = linearLayoutManager.get()
         character_recycler.adapter = charactersPagedAdapter
@@ -117,35 +110,58 @@ class SearchCharactersFragment : BaseFragment(), SearchView.OnQueryTextListener,
 
     }
 
-    override fun onCharacterClick(id: String?) {
+    override fun onCharacterClick(id: String) {
         navController.navigate(
             SearchCharactersFragmentDirections.actionSearchCharractersFragmentToCharacterDetailsFragment(
-                id!!
+                id
             )
         )
     }
 
-    override fun onQueryTextChange(newText: String?): Boolean {
-        if(newText.equals("")){
-            this.onQueryTextSubmit("")
-        }
-        return true
+    private fun createObservableFromView(searchView: SearchView): Observable<String> {
+        val subject = PublishSubject.create<String>()
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(s: String): Boolean {
+                subject.onComplete()
+                searchView.clearFocus()
+                return false
+            }
+
+            override fun onQueryTextChange(text: String): Boolean {
+                subject.onNext(text)
+                return false
+            }
+        })
+
+        return subject
     }
 
-    override fun onQueryTextSubmit(query: String?): Boolean {
-        val name = query ?: ""
-
-
-        submitAndObserveSearch(name)
-
-
-        return true
-    }
 
     private fun submitAndObserveSearch(name: String) {
-        viewModel.setStringListener(name)
+        viewModel.setSearchString(name)
+    }
 
+    private fun showLoading() {
+        loading.visibility = View.VISIBLE
+    }
+
+    private fun removeLoading(){
+        loading.visibility=View.GONE
+    }
+
+    private fun showError(message:String?){
+        removeLoading()
+        Toast.makeText(activity, message?:"there was an error", Toast.LENGTH_LONG).show()
+    }
+
+    private fun renderData(data: PagedList<CharacterDomainModel>?) {
+        charactersPagedAdapter.submitList(data)
 
     }
 
+    override fun onStop() {
+        super.onStop()
+        disposable.clear()
+    }
 }

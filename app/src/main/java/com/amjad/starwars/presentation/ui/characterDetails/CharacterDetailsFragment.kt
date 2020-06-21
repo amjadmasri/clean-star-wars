@@ -7,20 +7,17 @@ import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.amjad.starwars.R
-import com.amjad.starwars.common.models.Status
+import com.amjad.starwars.domain.models.FilmDomainModel
 import com.amjad.starwars.presentation.models.CharacterPresentationModel
+import com.amjad.starwars.presentation.models.SpeciesPresentationModel
 import com.amjad.starwars.presentation.ui.base.BaseFragment
 import com.amjad.starwars.presentation.viewModels.CharacterDetailsViewModel
 import com.amjad.starwars.presentation.viewModels.ViewModelProviderFactory
-import io.reactivex.Scheduler
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_character_details.*
 import javax.inject.Inject
 import javax.inject.Provider
@@ -57,42 +54,54 @@ class CharacterDetailsFragment : BaseFragment() {
         viewModel = ViewModelProvider(this, viewModelProviderFactory)
             .get(CharacterDetailsViewModel::class.java)
 
-        characterId = CharacterDetailsFragmentArgs.fromBundle(arguments!!).characterId
+        characterId = CharacterDetailsFragmentArgs.fromBundle(requireArguments()).characterId
 
         viewModel.getCharacterDetails(characterId)
 
         viewModel.observeCharacterResult()
             .observe(viewLifecycleOwner, Observer {
-                render(it)
+                renderCharacterDetails(it)
+            })
+
+        viewModel.observeSpeciesDetails()
+            .observe(viewLifecycleOwner, Observer {
+                renderSpeciesDetails(it)
+            })
+
+        viewModel.observeFilmList()
+            .observe(viewLifecycleOwner, Observer {
+                renderFilmList(it)
+            })
+
+        viewModel.observeErrorMessage()
+            .observe(viewLifecycleOwner, Observer {
+                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
             })
 
     }
 
-    private fun render(data: CharacterPresentationModel) {
+    private fun renderFilmList(filmList: List<FilmDomainModel>) {
+        film_loading.hide()
+        filmAdapter.setData(filmList)
+    }
+
+    private fun renderSpeciesDetails(species: SpeciesPresentationModel) {
+        species_loading.hide()
+        species_name_text.text = species.name
+        language_text.text = species.language
+
+        homeworld_loading.hide()
+        planet_name_text.text = species.homeWorld?.name
+        population_text.text = species.homeWorld?.population
+    }
+
+    private fun renderCharacterDetails(data: CharacterPresentationModel) {
         character_loading.hide()
         name_text.text = data.name
         birthdate_text.text = data.birthYear
         height_cm.text = data.heightInCm
         height_inches.text = data.heightInches
         hieght_feet.text = data.heightFeet
-
-        val species=data.species
-        if (species != null) {
-            species_loading.hide()
-            species_name_text.text = species.name
-            language_text.text = species.language
-        }
-
-        if (species?.homeworld != null) {
-            homeworld_loading.hide()
-            planet_name_text.text = species.homeworld?.name
-            population_text.text = species.homeworld?.population
-        }
-
-        if(data.films.size>0) {
-            film_loading.hide()
-            filmAdapter.setData(data.films)
-        }
     }
 
     private fun setupUi() {

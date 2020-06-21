@@ -11,7 +11,7 @@ data class SpeciesPresentationModel(
     val edited: String,
     val eyeColors: String,
     val hairColors: String,
-    var homeworld: PlanetDomainModel?,
+    var homeWorld: PlanetDomainModel?,
     val language: String,
     val name: String,
     val skinColors: String,

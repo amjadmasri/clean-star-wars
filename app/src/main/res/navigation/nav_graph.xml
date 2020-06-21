@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/searchCharactersFragment"
         android:name="com.amjad.starwars.presentation.ui.searchCharacters.SearchCharactersFragment"
-        android:label="fragment_search_charracters"
+        android:label="Search Star Wars"
         tools:layout="@layout/fragment_search_charracters" >
         <action
             android:id="@+id/action_searchCharractersFragment_to_characterDetailsFragment"
@@ -17,7 +17,7 @@
     <fragment
         android:id="@+id/characterDetailsFragment"
         android:name="com.amjad.starwars.presentation.ui.characterDetails.CharacterDetailsFragment"
-        android:label="fragment_character_details"
+        android:label="Details"
         tools:layout="@layout/fragment_character_details" >
         <argument
             android:name="character_id"

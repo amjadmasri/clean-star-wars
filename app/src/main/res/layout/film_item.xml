@@ -44,9 +44,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            tools:text="TextView"
-            app:layout_constraintStart_toEndOf="@+id/textView3"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toEndOf="@+id/textView2"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="TextView" />
 
         <TextView
             android:id="@+id/textView2"
@@ -56,7 +56,6 @@
             android:layout_marginTop="8dp"
             android:text="@string/title"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@id/film_title"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -65,7 +64,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:text="@string/release_date"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
@@ -76,10 +75,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            tools:text="TextView"
+            android:layout_marginTop="8dp"
             app:layout_constraintStart_toEndOf="@+id/textView3"
-            app:layout_constraintTop_toBottomOf="@+id/film_title" />
+            app:layout_constraintTop_toBottomOf="@+id/film_title"
+            tools:text="TextView" />
 
         <TextView
             android:id="@+id/textView5"

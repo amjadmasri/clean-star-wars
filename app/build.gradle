@@ -44,13 +44,13 @@ android {
 }
 
 dependencies {
-    def nav_version = "2.1.0"
+    def nav_version = "2.2.2"
     def retrofit_version = "2.6.2"
     def lifecycle_version = "2.1.0"
 
-    def paging_version = "2.1.0"
+    def paging_version = "2.1.2"
 
-    def room_version = "2.2.1"
+    def room_version = "2.2.5"
 
 
     implementation "androidx.room:room-runtime:$room_version"
@@ -58,6 +58,7 @@ dependencies {
     implementation "androidx.room:room-rxjava2:$room_version"
 
     implementation "androidx.paging:paging-runtime-ktx:$paging_version"
+    implementation "androidx.paging:paging-rxjava2:$paging_version"
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"

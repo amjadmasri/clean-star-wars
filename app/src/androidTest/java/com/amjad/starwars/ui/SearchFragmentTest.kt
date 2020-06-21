@@ -21,25 +21,4 @@ import org.mockito.junit.MockitoJUnitRunner
 @RunWith(MockitoJUnitRunner::class)
 class SearchFragmentTest {
 
-
-
-    @Test
-    fun ensureTextChangesWork() {
-
-        val mockNavController = mock(NavController::class.java)
-        val titleScenario = launchFragmentInContainer<SearchCharactersFragment>()
-
-        titleScenario.onFragment { fragment ->
-            Navigation.setViewNavController(fragment.requireView(), mockNavController)
-        }
-
-        onView(withId(R.id.searchView))
-            .perform(SearchViewActionExtension.submitText("search text"))
-
-
-
-        onView(withId(R.id.loading)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)))
-    }
-
-
 }
